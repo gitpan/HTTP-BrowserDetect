@@ -8,13 +8,13 @@ require Exporter;
 @EXPORT	   = qw();
 @EXPORT_OK = qw();
 $REVISION  = '$Id: BrowserDetect.pm,v 1.1 1999/03/17 04:38:06 lee Exp lee $';
-$VERSION   = '0.941';
+$VERSION   = '0.95';
 
 # Operating Systems
 push @ALL_TESTS,(qw(win16 win3x win31 win95 win98 winnt windows win32 win2k mac mac68k macppc os2 unix sun sun4 sun5 suni86 irix irix5 irix6 hpux hpux9 hpux10 aix aix1 aix2 aix3 aix4 linux sco unixware mpras reliant dec sinix freebsd bsd vms x11));
 
 # Browsers
-push @ALL_TESTS,(qw(mosaic netscape nav2 nav3 nav4 nav4up nav45 nav5 navgold ie ie3 ie4 ie4up ie5 opera lynx aol aol3 neoplanet neoplanet2 wget getright robot yahoo altavista lycos infoseek lwp webcrawler linkexchange slurp webtv));
+push @ALL_TESTS,(qw(mosaic netscape nav2 nav3 nav4 nav4up nav45 nav5 navgold ie ie3 ie4 ie4up ie5 ie55 opera lynx aol aol3 neoplanet neoplanet2 wget getright robot yahoo altavista lycos infoseek lwp webcrawler linkexchange slurp webtv staroffice lotusnotes konqueror icab google java));
 
 
 #######################################################################################################
@@ -69,14 +69,33 @@ sub _test {
 
   my $ua = lc $self->{user_agent};
 
-  # Browser version  
+  # Browser version
   my ($major, $minor, $beta) = ($ua =~ / \/			# Version starts with a slash
+				          [A-Za-z]*		# Eat any letters before the major version
                                           ( [^\.]* )		# Major version number is everything before the first dot
                                           \.			# The first dot
                                           ( [\d]* )		# Minor version number is every digit after the first dot
                                           [\d\.]*		# Throw away remaining numbers and dots
                                           ( [^\s]* )		# Beta version string is up to next space
                                         /x);
+
+  if (index($ua,"compatible") !=-1) {
+      ($major, $minor, $beta)    = ($ua =~ / 
+				    compatible;       
+				    \s*
+				    \w*				# Browser name
+				    [\s|\/]
+				    [A-Za-z]*			# Eat any letters before the major version
+				    ( [^\.]* )			# Major version number is everything before first dot
+				    \.				# The first dot
+				    ( [\d]* )			# Minor version nnumber is digits after first dot
+				    [\d\.]*			# Throw away remaining dots and digits
+				    ( [^;]* )			# Beta version is up to the ;
+				    ;
+				    /x);
+
+
+  }
 
   $self->{tests} = {};
   my $tests = $self->{tests};
@@ -88,27 +107,18 @@ sub _test {
   $tests->{NAV3}      = (($tests->{NETSCAPE}) && $major == 3);
   $tests->{NAV4}      = (($tests->{NETSCAPE}) && $major == 4);
   $tests->{NAV45}     = (($tests->{NETSCAPE}) && $major == 4 && $minor == 5);
-  $tests->{NAV5}      = (($tests->{NETSCAPE}) && $major == 5);
   $tests->{NAV4UP}    = (($tests->{NETSCAPE}) && $major >= 4);   
   $tests->{NAVGOLD}   = (index($beta,"gold") != -1);
-  
+  $tests->{NAV5}      = (($tests->{NETSCAPE}) && $major == 5);
+
   # Internet Explorer browsers
-  
+
   $tests->{IE}               = (index($ua,"msie") != -1);  
-  ($major, $minor, $beta)    = ($ua =~ /
-                                          msie                 # MSIE
-				          \s
-                                          ( [^\.]* )	       # Major version number is everything before first dot
-                                          \.		       # The first dot
-                                          ( [\d]* )	       # Minor version nnumber is digits after first dot
-                                          [\d\.]*	       # Throw away remaining dots and digits
-                                          ( [^;]* )	       # Beta version is up to the ;
-                                          ;
-                                        /x) if $tests->{IE};  
   $tests->{IE3}              = (($tests->{IE}) && $major == 3);
   $tests->{IE4}              = (($tests->{IE}) && $major == 4);
-  $tests->{IE5}              = (($tests->{IE}) && $major == 5);
   $tests->{IE4UP}            = (($tests->{IE}) && $major >= 4);
+  $tests->{IE5}              = (($tests->{IE}) && $major == 5);
+  $tests->{IE55}             = (($tests->{IE}) && $major == 5 && $minor == 5);
 
   # Neoplanet browsers
 
@@ -118,18 +128,13 @@ sub _test {
   # Opera browsers
   
   $tests->{OPERA} = (index($ua,"opera") != -1);
-  ($major, $minor, $beta) = ($ua =~ /
-                                         opera \/ 
-                                         ( [^\.]* )
-                                         \. 
-                                         ( [\d]* )
-                                         [\d\.]* 
-                                         ( [^;]* )
-                                         ;
-                                       /x) if $tests->{OPERA};  
   
   # Other browsers
   
+  $tests->{STAROFFICE}     = (index($ua,"staroffice") != -1);
+  $tests->{ICAB}           = (index($ua,"icab") != -1);
+  $tests->{LOTUSNOTES}     = (index($ua,"lotus-notes") != -1);
+  $tests->{KONQUEROR}      = (index($ua,"konqueror") != -1);
   $tests->{LYNX}           = (index($ua,"lynx") != -1);
   $tests->{AOL}            = (index($ua,"aol") != -1);
   $tests->{AOL3}           = (index($ua,"aol 3.0") != -1);
@@ -137,8 +142,12 @@ sub _test {
   $tests->{MOSAIC}         = (index($ua,"mosaic") != -1);
   $tests->{WGET}           = (index($ua,"wget") != -1);
   $tests->{GETRIGHT}       = (index($ua,"getright") != -1);
-  $tests->{LWP}            = (index($ua,"libwww-perl") != -1);
+  $tests->{LWP}            = (index($ua,"libwww-perl") != -1 ||
+			      index($ua,"lwp-") != -1);
   $tests->{YAHOO}          = (index($ua,"yahoo") != -1);
+  $tests->{GOOGLE}         = (index($ua,"google") != -1);
+  $tests->{JAVA}           = (index($ua,"java") != -1 ||
+			      index($ua,"jdk") != -1);
   $tests->{ALTAVISTA}      = (index($ua,"altavista") != -1);
   $tests->{SCOOTER}        = (index($ua,"scooter") != -1);
   $tests->{LYCOS}          = (index($ua,"lycos") != -1);
@@ -155,7 +164,8 @@ sub _test {
 			       $tests->{INFOSEEK} ||
 			       $tests->{WEBCRAWLER} ||
 			       $tests->{LINKEXCHANGE} ||
-			       $tests->{SLURP}) ||
+			       $tests->{SLURP} ||
+			       $tests->{GOOGLE}) ||
 			      index($ua,"bot") != -1 ||
 			      index($ua,"spider") != -1 ||
 			      index($ua,"crawler") != -1 ||
@@ -447,13 +457,18 @@ test for the browser version, saving you from checking the version separately.
 
   mosaic
   netscape nav2 nav3 nav4 nav4up nav45 nav5 navgold
-  ie ie3 ie4 ie4up ie5
+  ie ie3 ie4 ie4up ie5 ie55
   aol aol3 
   neoplanet neoplanet2 
   webtv
   opera
   lynx
   emacs
+  staroffice
+  lotusnotes
+  icab
+  konqueror
+  java
 
 =over
 
@@ -486,6 +501,7 @@ exist on the Web.
   webcrawler 
   linkexchange 
   slurp 
+  google
 
 =head1 AUTHOR
 

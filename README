@@ -7,8 +7,8 @@ SYNOPSIS
           
         my $browser = new HTTP::BrowserDetect($user_agent_string);
         if ($browser->windows) {
-          if ($browser->winnt) print "WinNT";
-          if ($brorwser->win95) print "Win95";
+          if ($browser->winnt) ...
+          if ($brorwser->win95) ...
         }
 
         print $browser->netscape;
@@ -115,13 +115,18 @@ DESCRIPTION
 
       mosaic
       netscape nav2 nav3 nav4 nav4up nav45 nav5 navgold
-      ie ie3 ie4 ie4up ie5
+      ie ie3 ie4 ie4up ie5 ie55
       aol aol3 
       neoplanet neoplanet2 
       webtv
       opera
       lynx
       emacs
+      staroffice
+      lotusnotes
+      icab
+      konqueror
+      java
 
     browser_string()
         Returns one of the following strings, or undef.
@@ -148,6 +153,7 @@ DESCRIPTION
       webcrawler 
       linkexchange 
       slurp 
+      google
 
 AUTHOR
     Lee Semel, lee@semel.net

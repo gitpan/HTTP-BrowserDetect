@@ -19,6 +19,8 @@ $loaded = 1;
       ['Mozilla/3.0 (compatible; MSIE 4.0; Windows 95)','4.0','MSIE','Win95',qw(ie ie4 ie4up windows win32 win95)],
       ['Mozilla/4.0 (compatible; MSIE 4.01; Windows 95)','4.01','MSIE','Win95',qw(ie ie4 ie4up windows win32 win95)],
       ['Mozilla/4.0 (compatible; MSIE 5.0b2; Windows NT)','5.0','MSIE','WinNT',qw(ie ie5 ie4up windows win32 winnt)],
+      ['Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)','5.5','MSIE','WinNT',qw(ie ie5 ie55 ie4up windows win32 winnt)],
+      ['Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0) via proxy gateway Something/1.23','5.5','MSIE','WinNT',qw(ie ie5 ie55 ie4up windows win32 winnt win2k)],
       ['Mozilla/3.0 (Macintosh; I; PPC)','3.0','Netscape','Mac',qw(netscape nav3 mac macppc)],
       ['Mozilla/4.0 (compatible; MSIE 5.0; Win32)','5.0','MSIE',undef,qw(ie ie4up ie5 windows win32)],
       ['Mozilla/4.0 (compatible; Opera/3.0; Windows 4.10) 3.50','3.0','Opera',undef,qw(opera windows)],
@@ -29,7 +31,15 @@ $loaded = 1;
       ['Wget/1.4.5','1.4',undef,undef,qw(wget robot)],
       ['libwww-perl/5.11','5.11',undef,undef,qw(lwp robot)],
       ['GetRight/3.2.1','3.2',undef,undef,qw(getright robot)],
+      ['Mozilla/3.0 (compatible; StarOffice/5.1; Linux)','5.1',undef,'Linux',qw(linux unix staroffice)],
+      ['Mozilla/3.0 (compatible; StarOffice/5.1; Win32)','5.1',undef,undef,qw(win32 windows staroffice)],
+      ['iCab/Pre2.0 (Macintosh; I; PPC)','2.0',undef,'Mac',qw(mac macppc icab)],
+      ['Konqueror/1.1.2','1.1',undef,undef,qw(konqueror)],
+      ['Lotus-Notes/4.5 ( OS/2 )','4.5',undef,'OS2',qw(lotusnotes os2)],
+      ['Java1.0.2','0.0',undef,undef,qw(java)],
+      ['Googlebot/1.0 (googlebot@googlebot.com http://googlebot.com/)','1.0',undef,undef,qw(google robot)],
       ['Nothing','0.0',undef,undef,qw()],
+      [undef,'0.0',undef,undef,qw()],
      );
 
 print STDERR $HTTP::BrowserDetect::VERSION, "\n";
