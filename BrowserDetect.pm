@@ -7,17 +7,17 @@ require Exporter;
 @ISA	   = qw(Exporter);
 @EXPORT	   = qw();
 @EXPORT_OK = qw();
-$REVISION  = '$Id: BrowserDetect.pm,v 1.1 1999/03/17 04:38:06 lee Exp lee $';
-$VERSION   = '0.96';
+$REVISION  = '$Id: BrowserDetect.pm,v 1.4 2001/01/31 17:44:27 lsemel Exp $';
+$VERSION   = '0.97';
 
 # Operating Systems
-push @ALL_TESTS,(qw(win16 win3x win31 win95 win98 winnt windows win32 win2k mac mac68k macppc os2 unix sun sun4 sun5 suni86 irix irix5 irix6 hpux hpux9 hpux10 aix aix1 aix2 aix3 aix4 linux sco unixware mpras reliant dec sinix freebsd bsd vms x11 amiga));
+push @ALL_TESTS,(qw(win16 win3x win31 win95 win98 winnt windows win32 win2k winme mac mac68k macppc os2 unix sun sun4 sun5 suni86 irix irix5 irix6 hpux hpux9 hpux10 aix aix1 aix2 aix3 aix4 linux sco unixware mpras reliant dec sinix freebsd bsd vms x11 amiga));
 
 # Devices
 push @ALL_TESTS,(qw(palm audrey iopener wap));
 
 # Browsers
-push @ALL_TESTS,(qw(mosaic netscape nav2 nav3 nav4 nav4up nav45 nav5 navgold ie ie3 ie4 ie4up ie5 ie55 opera lynx aol aol3 neoplanet neoplanet2 avantgo emacs));
+push @ALL_TESTS,(qw(mosaic netscape nav2 nav3 nav4 nav4up nav45 nav45up nav6 nav6up navgold ie ie3 ie4 ie4up ie5 ie5up ie55 ie55up opera opera3 opera4 opera5 lynx aol aol3 aol4 aol5 aol6 neoplanet neoplanet2 avantgo emacs gecko));
 
 # Robots
 push @ALL_TESTS,(qw(wget getright robot yahoo altavista lycos infoseek lwp webcrawler linkexchange slurp webtv staroffice lotusnotes konqueror icab google java));
@@ -102,37 +102,59 @@ sub _test {
 
   }
 
+  $minor = 0+".$minor"; 
+
   $self->{tests} = {};
   my $tests = $self->{tests};
 
   # Netscape browsers
   
-  $tests->{NETSCAPE}  = (index($ua,"mozilla") != -1 && index($ua,"spoofer")==-1 && index($ua,"compatible")==-1);
-  $tests->{NAV2}      = (($tests->{NETSCAPE}) && $major == 2);
-  $tests->{NAV3}      = (($tests->{NETSCAPE}) && $major == 3);
-  $tests->{NAV4}      = (($tests->{NETSCAPE}) && $major == 4);
-  $tests->{NAV45}     = (($tests->{NETSCAPE}) && $major == 4 && $minor == 5);
-  $tests->{NAV4UP}    = (($tests->{NETSCAPE}) && $major >= 4);   
+  $tests->{NETSCAPE}  = (index($ua,"mozilla") != -1 && 
+			 index($ua,"spoofer") == -1 && index($ua,"compatible") == -1 &&
+			 index($ua,"opera") == -1 && index($ua,"webtv") == -1 && 
+			 index($ua,"hotjava") == -1);
+  $tests->{NAV2}      = ($tests->{NETSCAPE} && $major == 2);
+  $tests->{NAV3}      = ($tests->{NETSCAPE} && $major == 3);
+  $tests->{NAV4}      = ($tests->{NETSCAPE} && $major == 4);
+  $tests->{NAV4UP}    = ($tests->{NETSCAPE} && $major >= 4); 
+  $tests->{NAV45}     = ($tests->{NETSCAPE} && $major == 4 && $minor == .5);
+  $tests->{NAV45UP}   = ($tests->{NAV4} && $minor >= .5) || ($tests->{NETSCAPE} && $major >= 5);
   $tests->{NAVGOLD}   = (index($beta,"gold") != -1);
-  $tests->{NAV5}      = (($tests->{NETSCAPE}) && $major == 5);
-
+  $tests->{NAV6}      = ($tests->{NETSCAPE} && $major == 5); # go figure
+  $tests->{NAV6UP}    = ($tests->{NETSCAPE} && $major >= 5);
+  $tests->{GECKO}     = (index($ua,"gecko") != -1);
+  
   # Internet Explorer browsers
 
   $tests->{IE}               = (index($ua,"msie") != -1 || index($ua,'microsoft internet explorer') != -1);  
-  $tests->{IE3}              = (($tests->{IE}) && $major == 3);
-  $tests->{IE4}              = (($tests->{IE}) && $major == 4);
-  $tests->{IE4UP}            = (($tests->{IE}) && $major >= 4);
-  $tests->{IE5}              = (($tests->{IE}) && $major == 5);
-  $tests->{IE55}             = (($tests->{IE}) && $major == 5 && $minor == 5);
-
+  $tests->{IE3}              = ($tests->{IE} && $major == 3);
+  $tests->{IE4}              = ($tests->{IE} && $major == 4);
+  $tests->{IE4UP}            = ($tests->{IE} && $major >= 4);
+  $tests->{IE5}              = ($tests->{IE} && $major == 5);
+  $tests->{IE5UP}            = ($tests->{IE} && $major >= 5);
+  $tests->{IE55}             = ($tests->{IE} && $major == 5 && $minor >= .5);
+  $tests->{IE55UP}           = ($tests->{IE5} && $minor >= .5) || ($tests->{IE} && $major >= 6);
+ 
   # Neoplanet browsers
 
   $tests->{NEOPLANET}      = (index($ua,"neoplanet") != -1);
   $tests->{NEOPLANET2}     = ($tests->{NEOPLANET} && index($ua,"2.") != -1); 
 
+  # AOL Browsers
+
+  $tests->{AOL}       = (index($ua,"aol")     != -1);
+  $tests->{AOL3}      = (index($ua,"aol 3.0") != -1) || ($tests->{AOL} && $tests->{IE3});
+  $tests->{AOL4}      = (index($ua,"aol 4.0") != -1) || ($tests->{AOL} && $tests->{IE4});
+  $tests->{AOL5}      = (index($ua,"aol 5.0") != -1);
+  $tests->{AOL6}      = (index($ua,"aol 6.0") != -1);
+  $tests->{AOLTV}     = (index($ua,"navio") != -1) || (index($ua,"navio_aoltv") != -1);
+
   # Opera browsers
   
-  $tests->{OPERA} = (index($ua,"opera") != -1);
+  $tests->{OPERA}     = (index($ua,"opera")   != -1);
+  $tests->{OPERA3}    = (index($ua,"opera 3") != -1) || (index($ua,"opera/3") != -1);
+  $tests->{OPERA4}    = (index($ua,"opera 4") != -1) || (index($ua,"opera/4") != -1);
+  $tests->{OPERA5}    = (index($ua,"opera 5") != -1) || (index($ua,"opera/5") != -1);
   
   # Other browsers
 
@@ -141,8 +163,6 @@ sub _test {
   $tests->{LOTUSNOTES}     = (index($ua,"lotus-notes") != -1);
   $tests->{KONQUEROR}      = (index($ua,"konqueror") != -1);
   $tests->{LYNX}           = (index($ua,"lynx") != -1);
-  $tests->{AOL}            = (index($ua,"aol") != -1);
-  $tests->{AOL3}           = (index($ua,"aol 3.0") != -1);
   $tests->{WEBTV}          = (index($ua,"webtv") != -1);
   $tests->{MOSAIC}         = (index($ua,"mosaic") != -1);
   $tests->{WGET}           = (index($ua,"wget") != -1);
@@ -215,11 +235,16 @@ sub _test {
   $tests->{WIN31}    = (index($ua,"win16") != -1 || index($ua,"windows 3.1") != -1 || index($ua,"windows 16-bit") != -1);
   $tests->{WIN95}    = (index($ua,"win95") != -1 || index($ua,"windows 95") != -1);
   $tests->{WIN98}    = (index($ua,"win98") != -1 || index($ua,"windows 98") != -1);
-  $tests->{WINNT}    = (index($ua,"winnt") != -1 || index($ua,"windows nt") != -1);
-  $tests->{WIN2K}    = (index($ua,"nt 5") != -1);
-  $tests->{WIN32}    = (($tests->{WIN95} || $tests->{WIN98} || $tests->{WINNT} || $tests->{WIN2K}) || index($ua,"win32") != -1);
+  $tests->{WINNT}    = (index($ua,"winnt") != -1 || 
+			index($ua,"windows nt") != -1 || 
+			index($ua,"nt4") != -1 || 
+			index($ua,"nt3") != -1);
+  $tests->{WIN2K}    = (index($ua,"nt 5") != -1 || index($ua,"nt5") != -1);
+  $tests->{WINME}    = (index($ua,"win 9x 4.90") != -1); # whatever
+  $tests->{WIN32}    = (($tests->{WIN95} || $tests->{WIN98} || $tests->{WINME} || $tests->{WINNT} || 
+			 $tests->{WIN2K}) || index($ua,"win32") != -1);
   $tests->{WINDOWS}  = (($tests->{WIN16} || $tests->{WIN31} || $tests->{WIN95} || $tests->{WIN98} ||
-			 $tests->{WINNT} || $tests->{WIN32} || $tests->{WIN2K}) || index($ua,"win") != -1);
+			 $tests->{WINNT} || $tests->{WIN32} || $tests->{WIN2K} || $tests->{WINME}) || index($ua,"win") != -1);
   
   # Mac operating systems
   
@@ -272,11 +297,10 @@ sub _test {
 			$tests->{BSD}); 
 
   $tests->{VMS} = (index($ua,"vax") != -1 || index($ua,"openvms") != -1);
-  
-  $self->{major}  = $major;
-  $self->{minor}  = $minor;
-  $self->{beta}	  = $beta;
 
+  $self->{major} = $major;
+  $self->{minor} = $minor;
+  $self->{beta} = $beta;
 }
     
 sub browser_string {
@@ -315,12 +339,7 @@ sub os_string {
 sub version {
   my ($self, $check) = _self_or_default(@_);
   my $version;
-  if (defined $self->{major} && defined $self->{minor}) {
-    $version = join '.' , $self->{major}, $self->{minor};
-    $version += 0;
-  } else {
-    $version = $self->{major};
-  }
+  $version = $self->{major} + $self->{minor};
   if (defined $check) { 
     return $check == $version;
   } else {
@@ -342,7 +361,7 @@ sub minor {
   my ($self, $check) = _self_or_default(@_);
   my ($version) = $self->{minor};
   if (defined $check) { 
-    return ".$check" == ".$version";
+      return ($check == $self->{minor});
   } else {
     return $version;
   }
@@ -365,33 +384,37 @@ __END__
 
 =head1 NAME
 
-HTTP::BrowserDetect - Determine the Web browser, version, and platform
-from an HTTP user agent string
+HTTP::BrowserDetect - Determine the Web browser, version, and platform from an HTTP user agent string
 
 =head1 SYNOPSIS
 
     use HTTP::BrowserDetect;
-      
+
     my $browser = new HTTP::BrowserDetect($user_agent_string);
+
+    # Detect operating system
     if ($browser->windows) {
       if ($browser->winnt) ...
       if ($brorwser->win95) ...
     }
-
-    print $browser->netscape;
-    if (browser->major(4)) {
-      ...;
-    }
-    if (browser->minor(5)) {
-      ...;
-    }
-    
-    $browser->user_agent($another_user_agent_string);
     print $browser->mac;
+
+    # Detect browser vendor and version
+    print $browser->netscape;
     print $browser->ie;
+    if (browser->major(4)) {
+	if ($browser->minor() > .5) {
+	    ...
+	}
+    }
     if ($browser->version() > 4) {
       ...;
     }
+    
+    # Process a different user agent string
+    $browser->user_agent($another_user_agent_string);
+
+
 
 =head1 DESCRIPTION
 
@@ -401,7 +424,7 @@ the object.
 
 This module is based upon the JavaScript browser detection code
 available at
-B<http://developer.netscape.com/docs/examples/javascript/browser_type.html>.
+B<http://www.mozilla.org/docs/web-developer/sniffer/browser_type.html>.
 
 =head2 CREATING A NEW BROWSER DETECT OBJECT AND SETTING THE USER AGENT STRING
 
@@ -434,23 +457,27 @@ each time.
 
 =item major($major)
 
-Returns the portion of the browser version up to the first decimal
-point as a string.  If passed a parameter, returns true if it equals
-the major version specified by the user agent string.
+Returns the integer portion of the browser version.
+If passed a parameter, returns true if it equals
+the browser major version.
 
 =item minor($minor)
 
-Returns the numeric portion of the browser after first decimal point
-as a string.  If passed a parameter, returns true if it equals the
-minor version specified by the user agent string.  On occasion a
-version may have more than one decimal point, such as 'Wget/1.4.5'.
-The minor version does not include the second decimal point, or any
-further digits or decimals.
+Returns the decimal portion of the browser version as a B<floating-point number> less than 1.  
+For example, if the version is 4.05, this method returns .05; if the version is 4.5, this method returns .5.  
+B<This is a change in behavior from previous versions of this module, which returned a 
+string>.
+
+If passed a parameter, returns true if equals the minor version.  
+
+On occasion a version may have more than one decimal point, such 
+as 'Wget/1.4.5'. The minor version does not include the second decimal point, 
+or any further digits or decimals.
 
 =item version($version)
 
 Returns the version as a floating-point number.  If passed a
-parameter, returns true if it is numerically equal to the version
+parameter, returns true if it is equal to the version
 specified by the user agent string.
 
 =item beta($beta)
@@ -467,7 +494,7 @@ passed a parameter, returns true if equal to the beta version.
 The following methods are available, each returning a true or false
 value.  Some methods also test for the operating system version.
 
-  windows win16 win3x win31 win95 win98 winnt win32 win2k
+  windows win16 win3x win31 win95 win98 winnt win32 win2k winme
   mac mac68k macppc
   os2
   unix 
@@ -477,11 +504,14 @@ value.  Some methods also test for the operating system version.
   vms
   amiga
 
+It may not be possibile to detect Win98 in Netscape 4.x and earlier. 
+On Opera 3.0, the userAgent string includes "Windows 95/NT4" on all Win32, so you can't distinguish between Win95 and WinNT.
+
 =over 
 
 =item os_string()
 
-Returns one of the following strings, or undef.  These are the same set of strings returned by the
+Returns one of the following strings, or undef.  This method exists solely for compatibility with the
 B<HTTP::Headers::UserAgent> module.
 
   Win95, Win98, WinNT, Mac, Win3x, OS2, Unix, Linux
@@ -493,11 +523,12 @@ B<HTTP::Headers::UserAgent> module.
 The following methods are available, each returning a true or false value.  Some methods also
 test for the browser version, saving you from checking the version separately.
 
-  mosaic
-  netscape nav2 nav3 nav4 nav4up nav45 nav5 navgold
+  netscape nav2 nav3 nav4 nav4up nav45 nav45up navgold nav6 nav6up
+  gecko
   ie ie3 ie4 ie4up ie5 ie55
-  aol aol3 
   neoplanet neoplanet2 
+  mosaic
+  aol aol3 aol4 aol5 aol6
   webtv
   opera
   lynx
@@ -507,6 +538,9 @@ test for the browser version, saving you from checking the version separately.
   icab
   konqueror
   java
+
+
+Netscape 6, even though its called six, in the userAgent string has version number 5.  The nav6 and nav6up methods correctly handle this quirk.
 
 =over
 
@@ -558,11 +592,13 @@ Lee Semel, lee@semel.net
 
 =head1 SEE ALSO
 
-perl(1).
+"The Ultimate JavaScript Client Sniffer, Version 3.0", B<http://www.mozilla.org/docs/web-developer/sniffer/browser_type.html>.
+
+perl(1), L<HTTP::Headers>, L<HTTP::Headers::UserAgent>.
 
 =head1 COPYRIGHT
 
-Copyright 1999-2000 Lee Semel.  All rights reserved.  This program is free software;
+Copyright 1999-2001 Lee Semel.  All rights reserved.  This program is free software;
 you can redistribute it and/or modify it under the same terms as Perl itself. 
 
 =cut

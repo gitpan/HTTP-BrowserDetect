@@ -17,5 +17,12 @@ Revision history for Perl extension HTTP::BrowserDetect.
 0.95 Sat Aug 4  09:08:00 2000
 	- added additional browsers
 
-
-
+0.962 Tues Jan 31 12:45:00 2001
+	- changed how minor() method to return minor version as a floating point
+	- added additional browsers
+	- added additional 'up' methods
+	- added detection for mobile devices: wap, avantgo, audrey, etc.
+	- added netscape 6 detection and gecko
+	- added Windows ME detection
+	- updated url to javascript browser sniffer page
+	

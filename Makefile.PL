@@ -4,5 +4,5 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     'NAME'	=> 'HTTP::BrowserDetect',
     'VERSION_FROM' => 'BrowserDetect.pm', # finds $VERSION
-    'dist' => { COMPRESS=>"gzip", SUFFIX=>"gz" },
+    'dist' => { PREOP=>'perldoc -t BrowserDetect.pm > README', COMPRESS=>"gzip", SUFFIX=>"gz" },
 );

@@ -18,15 +18,15 @@ $loaded = 1;
       ['Mozilla/2.0 (compatible; MSIE 4.0; Windows 95)','4.0','MSIE','Win95',qw(ie ie4 ie4up windows win32 win95)],
       ['Mozilla/3.0 (compatible; MSIE 4.0; Windows 95)','4.0','MSIE','Win95',qw(ie ie4 ie4up windows win32 win95)],
       ['Mozilla/4.0 (compatible; MSIE 4.01; Windows 95)','4.01','MSIE','Win95',qw(ie ie4 ie4up windows win32 win95)],
-      ['Mozilla/4.0 (compatible; MSIE 5.0b2; Windows NT)','5.0','MSIE','WinNT',qw(ie ie5 ie4up windows win32 winnt)],
-      ['Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)','5.5','MSIE','WinNT',qw(ie ie5 ie55 ie4up windows win32 winnt)],
-      ['Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0) via proxy gateway Something/1.23','5.5','MSIE','WinNT',qw(ie ie5 ie55 ie4up windows win32 winnt win2k)],
+      ['Mozilla/4.0 (compatible; MSIE 5.0b2; Windows NT)','5.0','MSIE','WinNT',qw(ie ie5 ie5up ie4up windows win32 winnt)],
+      ['Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)','5.5','MSIE','WinNT',qw(ie ie5 ie5up ie55 ie55up ie4up windows win32 winnt)],
+      ['Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0) via proxy gateway Something/1.23','5.5','MSIE','WinNT',qw(ie ie5 ie5up ie55 ie55up ie4up windows win32 winnt win2k)],
       ['Mozilla/3.0 (Macintosh; I; PPC)','3.0','Netscape','Mac',qw(netscape nav3 mac macppc)],
-      ['Mozilla/4.0 (compatible; MSIE 5.0; Win32)','5.0','MSIE',undef,qw(ie ie4up ie5 windows win32)],
-      ['Mozilla/4.0 (compatible; Opera/3.0; Windows 4.10) 3.50','3.0','Opera',undef,qw(opera windows)],
-      ['Mozilla/4.0 (compatible; MSIE 5.0b1; Windows NT 5.0)','5.0','MSIE','WinNT',qw(ie ie4up ie5 windows win32 winnt win2k)],
-      ['Mozilla/4.06 [en] (Win98; I ;Nav)','4.06','Netscape','Win98',qw(netscape nav4 nav4up windows win32 win98)],
-      ['Mozilla/4.5 [en] (X11; I; FreeBSD 2.2.7-RELEASE i386)','4.5','Netscape','Unix',qw(netscape nav4 nav4up nav45 bsd freebsd unix x11)],
+      ['Mozilla/4.0 (compatible; MSIE 5.0; Win32)','5.0','MSIE',undef,qw(ie ie4up ie5 ie5up windows win32)],
+      ['Mozilla/4.0 (compatible; Opera/3.0; Windows 4.10) 3.50','3.0','Opera',undef,qw(opera opera3 windows)],
+      ['Mozilla/4.0 (compatible; MSIE 5.0b1; Windows NT 5.0)','5.0','MSIE','WinNT',qw(ie ie4up ie5 ie5up windows win32 winnt win2k)],
+      ['Mozilla/4.06 [en] (Win98; I ;Nav)','4.06','Netscape','Win98',qw(netscape nav4 nav4up windows win32 win98)], 
+      ['Mozilla/4.5 [en] (X11; I; FreeBSD 2.2.7-RELEASE i386)','4.5','Netscape','Unix',qw(netscape nav4 nav4up nav45 nav45up bsd freebsd unix x11)],
       ['Mozilla/3.03Gold (Win95; I)','3.03','Netscape','Win95', qw(netscape nav3 navgold windows win32 win95)],
       ['Wget/1.4.5','1.4',undef,undef,qw(wget robot)],
       ['libwww-perl/5.11','5.11',undef,undef,qw(lwp robot)],
@@ -50,6 +50,11 @@ $loaded = 1;
       ['AvantGo 3.2 (compatible; AvantGo 3.2)','0.0',undef,undef,qw(palm avantgo)],
       ['fetch/1.0 FreeBSD/4.0-CURRENT (i386)','1.0',undef,'Unix',qw(bsd freebsd unix robot)],
       ['Emacs-W3/2.1.105 URL/1.267 ((Unix?) ; TTY ; sparc-sun-solaris2.3)','2.1',undef,'Unix',qw(emacs sun unix)],
+      ['Mozilla/5.001 (windows; U; NT4.0; en-us) Gecko/25250101','5.001','Netscape','WinNT',qw(netscape nav4up nav45up windows winnt win32 gecko nav6 nav6up gecko)],
+      ['Mozilla/5.001 (Macintosh; N; PPC; ja) Gecko/25250101 MegaCorpBrowser/1.0 (MegaCorp, Inc.)','5.001','Netscape','Mac',qw(netscape nav4up nav45up nav6 nav6up mac macppc gecko)],
+      ['Mozilla/9.876 (X11; U; Linux 2.2.12-20 i686, en) Gecko/25250101 Netscape/5.432b1 (C-MindSpring)','9.876','Netscape','Linux',qw(netscape nav4up nav45up nav6up linux unix gecko x11)],
+      ['TinyBrowser/2.0 (TinyBrowser Comment) Gecko/20201231','2.0',undef,undef,qw(gecko)],
+      ['TinyBrowser/2.0 (TinyBrowser Comment) Gecko/20201231','2.000',undef,undef,qw(gecko)],
      );
 
 print STDERR $HTTP::BrowserDetect::VERSION, "\n";
@@ -74,17 +79,31 @@ foreach (@tests) {
 	    $fail = 1;
 	    push @reason, 'browser_string = "' . eval("${obj}browser_string()") . '"';
 	}
-
 	my ($major, $minor) = ($version =~ /([\d]*)\.([\d]*)/);
+	$minor = 0+".$minor";
 	unless (eval("${obj}version(\$version)")) {
 	    $fail = 1;
-	    push @reason, 'version = "' . eval("${obj}version") . '"';
+	    push @reason, 'version(' . $version . ') was false';
+	}
+	unless (eval("${obj}version()") == $version) {
+	    $fail = 1;
+	    push @reason, 'version() != ' . $version;
 	}
 	unless (eval("${obj}major(\$major)")) {
 	    $fail = 1;
-	    push @reason, 'major = "' . eval("${obj}major") . '"';
+	    push @reason, 'major(' . $major .') was false';
 	}
-
+	unless (eval("${obj}major()") == $major) {
+	    push @reason, 'major() != ' . $major;
+	}
+	unless (eval("${obj}minor(\$minor)")) {
+	    $fail = 1;
+	    push @reason, 'minor(' . $minor .') was false';
+	}
+	unless (eval("${obj}minor()") == $minor) {
+	    $fail = 1;
+	    push @reason, 'minor() != ' . $minor;
+	}
 	my %tests = map{$_=>1} @test_names;
 	foreach (@HTTP::BrowserDetect::ALL_TESTS, keys %tests) {
 	    unless (eval("${obj}$_()") == $tests{$_}) {
@@ -92,10 +111,12 @@ foreach (@tests) {
 		push @reason, $_;
 	    }
 	}
+
+	last if $fail;
     }
     if ($fail) {
       print "not ok " , $test_number;
-      print STDERR ' ' , $user_agent, ": ";
+      print STDERR ' user-agent="' , $user_agent, '": ';
       print STDERR join ", ", @reason;
     } else {
       print "ok ", $test_number;

@@ -4,27 +4,30 @@ NAME
 
 SYNOPSIS
         use HTTP::BrowserDetect;
-          
+
         my $browser = new HTTP::BrowserDetect($user_agent_string);
+
+        # Detect operating system
         if ($browser->windows) {
           if ($browser->winnt) ...
           if ($brorwser->win95) ...
         }
-
-        print $browser->netscape;
-        if (browser->major(4)) {
-          ...;
-        }
-        if (browser->minor(5)) {
-          ...;
-        }
-        
-        $browser->user_agent($another_user_agent_string);
         print $browser->mac;
+
+        # Detect browser vendor and version
+        print $browser->netscape;
         print $browser->ie;
+        if (browser->major(4)) {
+            if ($browser->minor() > .5) {
+                ...
+            }
+        }
         if ($browser->version() > 4) {
           ...;
         }
+        
+        # Process a different user agent string
+        $browser->user_agent($another_user_agent_string);
 
 DESCRIPTION
     The HTTP::BrowserDetect object does a number of tests on an HTTP
@@ -32,9 +35,8 @@ DESCRIPTION
     methods of the object.
 
     This module is based upon the JavaScript browser detection code
-    available at
-    http://developer.netscape.com/docs/examples/javascript/browser_t
-    ype.html.
+    available at http://www.mozilla.org/docs/web-
+    developer/sniffer/browser_type.html.
 
   CREATING A NEW BROWSER DETECT OBJECT AND SETTING THE USER AGENT STRING
 
@@ -59,24 +61,29 @@ DESCRIPTION
   DETECTING BROWSER VERSION
 
     major($major)
-        Returns the portion of the browser version up to the first
-        decimal point as a string. If passed a parameter, returns
-        true if it equals the major version specified by the user
-        agent string.
+        Returns the integer portion of the browser version. If
+        passed a parameter, returns true if it equals the browser
+        major version.
 
     minor($minor)
-        Returns the numeric portion of the browser after first
-        decimal point as a string. If passed a parameter, returns
-        true if it equals the minor version specified by the user
-        agent string. On occasion a version may have more than one
-        decimal point, such as 'Wget/1.4.5'. The minor version does
-        not include the second decimal point, or any further digits
-        or decimals.
+        Returns the decimal portion of the browser version as a
+        floating-point number less than 1. For example, if the
+        version is 4.05, this method returns .05; if the version is
+        4.5, this method returns .5. This is a change in behavior
+        from previous versions of this module, which returned a
+        string.
+
+        If passed a parameter, returns true if equals the minor
+        version.
+
+        On occasion a version may have more than one decimal point,
+        such as 'Wget/1.4.5'. The minor version does not include the
+        second decimal point, or any further digits or decimals.
 
     version($version)
         Returns the version as a floating-point number. If passed a
-        parameter, returns true if it is numerically equal to the
-        version specified by the user agent string.
+        parameter, returns true if it is equal to the version
+        specified by the user agent string.
 
     beta($beta)
         Returns any the beta version, consisting of any non-numeric
@@ -91,7 +98,7 @@ DESCRIPTION
     false value. Some methods also test for the operating system
     version.
 
-      windows win16 win3x win31 win95 win98 winnt win32 win2k
+      windows win16 win3x win31 win95 win98 winnt win32 win2k winme
       mac mac68k macppc
       os2
       unix 
@@ -99,10 +106,16 @@ DESCRIPTION
       aix aix1 aix2 aix3 aix4 linux sco unixware mpras reliant 
       dec sinix freebsd bsd
       vms
+      amiga
+
+    It may not be possibile to detect Win98 in Netscape 4.x and
+    earlier. On Opera 3.0, the userAgent string includes "Windows
+    95/NT4" on all Win32, so you can't distinguish between Win95 and
+    WinNT.
 
     os_string()
-        Returns one of the following strings, or undef. These are
-        the same set of strings returned by the
+        Returns one of the following strings, or undef. This method
+        exists solely for compatibility with the
         HTTP::Headers::UserAgent module.
 
           Win95, Win98, WinNT, Mac, Win3x, OS2, Unix, Linux
@@ -113,11 +126,12 @@ DESCRIPTION
     false value. Some methods also test for the browser version,
     saving you from checking the version separately.
 
-      mosaic
-      netscape nav2 nav3 nav4 nav4up nav45 nav5 navgold
+      netscape nav2 nav3 nav4 nav4up nav45 nav45up navgold nav6 nav6up
+      gecko
       ie ie3 ie4 ie4up ie5 ie55
-      aol aol3 
       neoplanet neoplanet2 
+      mosaic
+      aol aol3 aol4 aol5 aol6
       webtv
       opera
       lynx
@@ -128,10 +142,25 @@ DESCRIPTION
       konqueror
       java
 
+    Netscape 6, even though its called six, in the userAgent string
+    has version number 5. The nav6 and nav6up methods correctly
+    handle this quirk.
+
     browser_string()
         Returns one of the following strings, or undef.
 
         Netscape, MSIE, WebTV, AOL Browser, Opera, Mosaic, Lynx
+
+  DETECTING OTHER DEVICES
+
+    The following methods are available, each returning a true or
+    false value.
+
+      wap
+      audrey
+      iopener
+      palm
+      avantgo
 
   DETECTING ROBOTS
 
@@ -159,10 +188,15 @@ AUTHOR
     Lee Semel, lee@semel.net
 
 SEE ALSO
-    perl(1).
+    "The Ultimate JavaScript Client Sniffer, Version 3.0",
+    http://www.mozilla.org/docs/web-
+    developer/sniffer/browser_type.html.
+
+    perl(1), the HTTP::Headers manpage, the HTTP::Headers::UserAgent
+    manpage.
 
 COPYRIGHT
-    Copyright 1999-2000 Lee Semel. All rights reserved. This program
+    Copyright 1999-2001 Lee Semel. All rights reserved. This program
     is free software; you can redistribute it and/or modify it under
     the same terms as Perl itself.
 
