@@ -1,0 +1,162 @@
+NAME
+    HTTP::BrowserDetect - Determine the Web browser, version, and
+    platform from an HTTP user agent string
+
+SYNOPSIS
+        use HTTP::BrowserDetect;
+          
+        my $browser = new HTTP::BrowserDetect($user_agent_string);
+        if ($browser->windows) {
+          if ($browser->winnt) print "WinNT";
+          if ($brorwser->win95) print "Win95";
+        }
+
+        print $browser->netscape;
+        if (browser->major(4)) {
+          ...;
+        }
+        if (browser->minor(5)) {
+          ...;
+        }
+        
+        $browser->user_agent($another_user_agent_string);
+        print $browser->mac;
+        print $browser->ie;
+        if ($browser->version() > 4) {
+          ...;
+        }
+
+DESCRIPTION
+    The HTTP::BrowserDetect object does a number of tests on an HTTP
+    user agent string. The results of these tests are available via
+    methods of the object.
+
+    This module is based upon the JavaScript browser detection code
+    available at
+    http://developer.netscape.com/docs/examples/javascript/browser_t
+    ype.html.
+
+  CREATING A NEW BROWSER DETECT OBJECT AND SETTING THE USER AGENT STRING
+
+    new HTTP::BrowserDetect($user_agent_string)
+        The constructor may be called with a user agent string
+        specified. Otherwise, it will use the value specified by
+        $ENV{'HTTP_USER_AGENT'}, which is set by the web server when
+        calling a CGI script.
+
+        You may also use a non-object-oriented interface. For each
+        method, you may call HTTP::BrowserDetect::method_name(). You
+        will then be working with a default HTTP::BrowserDetect
+        object that is created behind the scenes.
+
+    user_agent($user_agent_string)
+        Returns the value of the user agent string. When called with
+        a parameter, it resets the user agent and reperforms all
+        tests on the string. This way you can process a series of
+        user agent strings (from a log file, perhaps) without
+        creating a new HTTP::BrowserDetect object each time.
+
+  DETECTING BROWSER VERSION
+
+    major($major)
+        Returns the portion of the browser version up to the first
+        decimal point as a string. If passed a parameter, returns
+        true if it equals the major version specified by the user
+        agent string.
+
+    minor($minor)
+        Returns the numeric portion of the browser after first
+        decimal point as a string. If passed a parameter, returns
+        true if it equals the minor version specified by the user
+        agent string. On occasion a version may have more than one
+        decimal point, such as 'Wget/1.4.5'. The minor version does
+        not include the second decimal point, or any further digits
+        or decimals.
+
+    version($version)
+        Returns the version as a floating-point number. If passed a
+        parameter, returns true if it is numerically equal to the
+        version specified by the user agent string.
+
+    beta($beta)
+        Returns any the beta version, consisting of any non-numeric
+        characters after the version number. For instance, if the
+        user agent string is 'Mozilla/4.0 (compatible; MSIE 5.0b2;
+        Windows NT)', returns 'b2'. If passed a parameter, returns
+        true if equal to the beta version.
+
+  DETECTING OS PLATFORM AND VERSION
+
+    The following methods are available, each returning a true or
+    false value. Some methods also test for the operating system
+    version.
+
+      windows win16 win3x win31 win95 win98 winnt win32 win2k
+      mac mac68k macppc
+      os2
+      unix 
+      sun sun4 sun5 suni86 irix irix5 irix6 hpux hpux9 hpux10 
+      aix aix1 aix2 aix3 aix4 linux sco unixware mpras reliant 
+      dec sinix freebsd bsd
+      vms
+
+    os_string()
+        Returns one of the following strings, or undef. These are
+        the same set of strings returned by the
+        HTTP::Headers::UserAgent module.
+
+          Win95, Win98, WinNT, Mac, Win3x, OS2, Unix, Linux
+
+  DETECTING BROWSER VENDOR
+
+    The following methods are available, each returning a true or
+    false value. Some methods also test for the browser version,
+    saving you from checking the version separately.
+
+      mosaic
+      netscape nav2 nav3 nav4 nav4up nav45 nav5 navgold
+      ie ie3 ie4 ie4up ie5
+      aol aol3 
+      neoplanet neoplanet2 
+      webtv
+      opera
+      lynx
+      emacs
+
+    browser_string()
+        Returns one of the following strings, or undef.
+
+        Netscape, MSIE, WebTV, AOL Browser, Opera, Mosaic, Lynx
+
+  DETECTING ROBOTS
+
+    robot()
+    Returns true if the user agent appears to be a robot, spider,
+    crawler, or other automated Web client.
+
+    The following additional methods are available, each returning a
+    true or false value. This is by no means a complete list of
+    robots that exist on the Web.
+
+      wget
+      getright
+      yahoo 
+      altavista 
+      lycos 
+      infoseek 
+      lwp
+      webcrawler 
+      linkexchange 
+      slurp 
+
+AUTHOR
+    Lee Semel, lee@semel.net
+
+SEE ALSO
+    perl(1).
+
+COPYRIGHT
+    Copyright 1999-2000 Lee Semel. All rights reserved. This program
+    is free software; you can redistribute it and/or modify it under
+    the same terms as Perl itself.
+

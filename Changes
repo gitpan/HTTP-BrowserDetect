@@ -7,3 +7,9 @@ Revision history for Perl extension HTTP::BrowserDetect.
 	- fixed version numbering problem, would return '.' instead of
 	  undef if useragent's version couldn't be found
 	- added more detection for AOL
+
+0.94 Sun Mar 19 18:51:00 2000
+	- changed copyright notice
+	- changed object's internal structure
+	- added Windows 2000 detection
+	- eliminated AUTOLOAD subroutine
