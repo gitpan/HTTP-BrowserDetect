@@ -26,3 +26,8 @@ Revision history for Perl extension HTTP::BrowserDetect.
 	- added Windows ME detection
 	- updated url to javascript browser sniffer page
 	
+0.98 Tue Jun 21 00:39:00 2004
+	- Added more browsers including Mozilla, Firefox, Safari
+	- added Mac OS X, WinXP, Win2k detection
+	- added more test cases
+    
