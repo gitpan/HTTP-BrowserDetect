@@ -8,13 +8,13 @@ require Exporter;
 @EXPORT	   = qw();
 @EXPORT_OK = qw();
 $REVISION  = '$Id: BrowserDetect.pm,v 1.1 1999/03/17 04:38:06 lee Exp lee $';
-$VERSION   = '0.94';
+$VERSION   = '0.941';
 
 # Operating Systems
 push @ALL_TESTS,(qw(win16 win3x win31 win95 win98 winnt windows win32 win2k mac mac68k macppc os2 unix sun sun4 sun5 suni86 irix irix5 irix6 hpux hpux9 hpux10 aix aix1 aix2 aix3 aix4 linux sco unixware mpras reliant dec sinix freebsd bsd vms x11));
 
 # Browsers
-push @ALL_TESTS,(qw(mosaic netscape nav2 nav3 nav4 nav4up nav45 nav5 navgold ie ie3 ie4 ie4up ie5 opera lynx ie aol aol3 neoplanet neoplanet2 wget getright robot yahoo altavista lycos infoseek lwp webcrawler linkexchange slurp webtv));
+push @ALL_TESTS,(qw(mosaic netscape nav2 nav3 nav4 nav4up nav45 nav5 navgold ie ie3 ie4 ie4up ie5 opera lynx aol aol3 neoplanet neoplanet2 wget getright robot yahoo altavista lycos infoseek lwp webcrawler linkexchange slurp webtv));
 
 
 #######################################################################################################
@@ -327,8 +327,8 @@ from an HTTP user agent string
       
     my $browser = new HTTP::BrowserDetect($user_agent_string);
     if ($browser->windows) {
-      if ($browser->winnt) print "WinNT";
-      if ($brorwser->win95) print "Win95";
+      if ($browser->winnt) ...
+      if ($brorwser->win95) ...
     }
 
     print $browser->netscape;
