@@ -8,14 +8,19 @@ require Exporter;
 @EXPORT	   = qw();
 @EXPORT_OK = qw();
 $REVISION  = '$Id: BrowserDetect.pm,v 1.1 1999/03/17 04:38:06 lee Exp lee $';
-$VERSION   = '0.95';
+$VERSION   = '0.96';
 
 # Operating Systems
-push @ALL_TESTS,(qw(win16 win3x win31 win95 win98 winnt windows win32 win2k mac mac68k macppc os2 unix sun sun4 sun5 suni86 irix irix5 irix6 hpux hpux9 hpux10 aix aix1 aix2 aix3 aix4 linux sco unixware mpras reliant dec sinix freebsd bsd vms x11));
+push @ALL_TESTS,(qw(win16 win3x win31 win95 win98 winnt windows win32 win2k mac mac68k macppc os2 unix sun sun4 sun5 suni86 irix irix5 irix6 hpux hpux9 hpux10 aix aix1 aix2 aix3 aix4 linux sco unixware mpras reliant dec sinix freebsd bsd vms x11 amiga));
+
+# Devices
+push @ALL_TESTS,(qw(palm audrey iopener wap));
 
 # Browsers
-push @ALL_TESTS,(qw(mosaic netscape nav2 nav3 nav4 nav4up nav45 nav5 navgold ie ie3 ie4 ie4up ie5 ie55 opera lynx aol aol3 neoplanet neoplanet2 wget getright robot yahoo altavista lycos infoseek lwp webcrawler linkexchange slurp webtv staroffice lotusnotes konqueror icab google java));
+push @ALL_TESTS,(qw(mosaic netscape nav2 nav3 nav4 nav4up nav45 nav5 navgold ie ie3 ie4 ie4up ie5 ie55 opera lynx aol aol3 neoplanet neoplanet2 avantgo emacs));
 
+# Robots
+push @ALL_TESTS,(qw(wget getright robot yahoo altavista lycos infoseek lwp webcrawler linkexchange slurp webtv staroffice lotusnotes konqueror icab google java));
 
 #######################################################################################################
 # BROWSER OBJECT
@@ -113,7 +118,7 @@ sub _test {
 
   # Internet Explorer browsers
 
-  $tests->{IE}               = (index($ua,"msie") != -1);  
+  $tests->{IE}               = (index($ua,"msie") != -1 || index($ua,'microsoft internet explorer') != -1);  
   $tests->{IE3}              = (($tests->{IE}) && $major == 3);
   $tests->{IE4}              = (($tests->{IE}) && $major == 4);
   $tests->{IE4UP}            = (($tests->{IE}) && $major >= 4);
@@ -130,7 +135,7 @@ sub _test {
   $tests->{OPERA} = (index($ua,"opera") != -1);
   
   # Other browsers
-  
+
   $tests->{STAROFFICE}     = (index($ua,"staroffice") != -1);
   $tests->{ICAB}           = (index($ua,"icab") != -1);
   $tests->{LOTUSNOTES}     = (index($ua,"lotus-notes") != -1);
@@ -168,9 +173,40 @@ sub _test {
 			       $tests->{GOOGLE}) ||
 			      index($ua,"bot") != -1 ||
 			      index($ua,"spider") != -1 ||
-			      index($ua,"crawler") != -1 ||
-			      index($ua,"agent") != -1);
+			      index($ua,"crawl") != -1 ||
+			      index($ua,"agent") != -1 ||
+			      index($ua,"seek") != -1 ||
+			      index($ua,"search") != -1 ||
+			      index($ua,"reap") != -1 ||
+			      index($ua,"worm") != -1 ||
+			      index($ua,"find") != -1 ||
+			      index($ua,"index") != -1 ||
+			      index($ua,"copy") != -1 ||
+			      index($ua,"fetch") != -1);
 
+  # Devices
+
+  $tests->{AUDREY}        = (index($ua,"audrey") != -1);
+  $tests->{IOPENER}       = (index($ua,"i-opener") != -1);
+  $tests->{AVANTGO}        = (index($ua,"avantgo") != -1);
+  $tests->{PALM}          = ($tests->{AVANTGO} || 
+			     index($ua,"palmos") != -1 );
+  $tests->{WAP}           = (index($ua,"up.browser") != -1 ||
+			     index($ua,"nokia") != -1 ||
+			     index($ua,"alcatel") != -1 ||
+			     index($ua,"ericsson") != -1 ||
+			     index($ua,"sie-") == 0 ||
+			     index($ua,"wmlib") != -1 ||
+			     index($ua," wap") != -1 ||
+			     index($ua,"wap ") != -1 ||
+			     index($ua,"wap/") != -1 ||
+			     index($ua,"-wap") != -1 ||
+			     index($ua,"wap-") != -1 ||
+			     index($ua,"wap") == 0 ||
+			     index($ua,"wapper") != -1 ||
+			     index($ua,"zetor") != -1);
+			     
+			     
   # Operating System
   
   $tests->{WIN16}    = (index($ua,"win16") != -1 || index($ua,"16bit") != -1 || index($ua,"windows 3") != -1 ||
@@ -193,10 +229,11 @@ sub _test {
   
   # Others
   
+  $tests->{AMIGA}   = (index($ua,'amiga') != -1);
   $tests->{EMACS}   = (index($ua,'emacs') != -1);
   $tests->{OS2}     = (index($ua,'os/2') != -1);
   
-  $tests->{SUN}     = (index($ua,"sunos") != -1);
+  $tests->{SUN}     = (index($ua,"sun") != -1);
   $tests->{SUN4}    = (index($ua,"sunos 4") != -1);
   $tests->{SUN5}    = (index($ua,"sunos 5") != -1);
   $tests->{SUNI86}  = (($tests->{SUN}) && index($ua,"i86") != -1);
@@ -438,6 +475,7 @@ value.  Some methods also test for the operating system version.
   aix aix1 aix2 aix3 aix4 linux sco unixware mpras reliant 
   dec sinix freebsd bsd
   vms
+  amiga
 
 =over 
 
@@ -479,6 +517,16 @@ Returns one of the following strings, or undef.
 Netscape, MSIE, WebTV, AOL Browser, Opera, Mosaic, Lynx
 
 =back
+
+=head2 DETECTING OTHER DEVICES
+
+The following methods are available, each returning a true or false value.
+
+  wap
+  audrey
+  iopener
+  palm
+  avantgo
 
 =head2 DETECTING ROBOTS
 

@@ -40,6 +40,16 @@ $loaded = 1;
       ['Googlebot/1.0 (googlebot@googlebot.com http://googlebot.com/)','1.0',undef,undef,qw(google robot)],
       ['Nothing','0.0',undef,undef,qw()],
       [undef,'0.0',undef,undef,qw()],
+      ['Nokia-WAP-Toolkit/1.3beta','1.3',undef,undef,qw(wap)],
+      ['Nokia7110/1.0 (30.05)','1.0',undef,undef,qw(wap)],
+      ['UP.Browser/4.1.2a-XXXX','4.1',undef,undef,qw(wap)],
+      ['Wapalizer/1.0','1.0',undef,undef,qw(wap)],
+      ['YourWap/1.16','1.16',undef,undef,qw(wap)],
+      ['AmigaVoyager/3.3.50 (AmigaOS/PPC)','3.3',undef,undef,qw(amiga)],
+      ['AmigaVoyager (compatible; AmigaVoyager; AmigaOS)','0.0',undef,undef,qw(amiga)],
+      ['AvantGo 3.2 (compatible; AvantGo 3.2)','0.0',undef,undef,qw(palm avantgo)],
+      ['fetch/1.0 FreeBSD/4.0-CURRENT (i386)','1.0',undef,'Unix',qw(bsd freebsd unix robot)],
+      ['Emacs-W3/2.1.105 URL/1.267 ((Unix?) ; TTY ; sparc-sun-solaris2.3)','2.1',undef,'Unix',qw(emacs sun unix)],
      );
 
 print STDERR $HTTP::BrowserDetect::VERSION, "\n";
@@ -58,21 +68,21 @@ foreach (@tests) {
 	eval("${obj}user_agent(\$user_agent)");
 	unless (eval("${obj}os_string()") eq $os_string) {
 	    $fail = 1;
-	    push @reason, 'os_string';
+	    push @reason, 'os_string = "' . eval("${obj}os_string()") . '"';
 	}
 	unless (eval("${obj}browser_string()") eq $browser_string) {
 	    $fail = 1;
-	    push @reason, 'browser_string';
+	    push @reason, 'browser_string = "' . eval("${obj}browser_string()") . '"';
 	}
 
 	my ($major, $minor) = ($version =~ /([\d]*)\.([\d]*)/);
 	unless (eval("${obj}version(\$version)")) {
 	    $fail = 1;
-	    push @reason, 'version';
+	    push @reason, 'version = "' . eval("${obj}version") . '"';
 	}
 	unless (eval("${obj}major(\$major)")) {
 	    $fail = 1;
-	    push @reason, 'major';
+	    push @reason, 'major = "' . eval("${obj}major") . '"';
 	}
 
 	my %tests = map{$_=>1} @test_names;
