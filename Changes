@@ -1,0 +1,9 @@
+Revision history for Perl extension HTTP::BrowserDetect.
+
+0.9  Wed Feb 17 23:45:52 1999
+	- original version; created by h2xs 1.18
+
+0.92 Mon Feb 7  12:34:56 2000
+	- fixed version numbering problem, would return '.' instead of
+	  undef if useragent's version couldn't be found
+	- added more detection for AOL
