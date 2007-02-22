@@ -30,4 +30,7 @@ Revision history for Perl extension HTTP::BrowserDetect.
 	- Added more browsers including Mozilla, Firefox, Safari
 	- added Mac OS X, WinXP, Win2k detection
 	- added more test cases
-    
+
+0.99 Thu Feb 22 16:47:00 2007
+        - Modifications by Peter Walsham
+        - Added support for Windows Server 2003 and Windows Vista

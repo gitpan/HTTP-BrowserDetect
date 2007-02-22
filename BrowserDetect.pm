@@ -7,10 +7,10 @@ require Exporter;
 @ISA	   = qw(Exporter);
 @EXPORT	   = qw();
 @EXPORT_OK = qw();
-$VERSION   = '0.98';
+$VERSION   = '0.99';
 
 # Operating Systems
-push @ALL_TESTS,(qw(win16 win3x win31 win95 win98 winnt windows win32 win2k winxp winme dotnet mac macosx mac68k macppc os2 unix sun sun4 sun5 suni86 irix irix5 irix6 hpux hpux9 hpux10 aix aix1 aix2 aix3 aix4 linux sco unixware mpras reliant dec sinix freebsd bsd vms x11 amiga));
+push @ALL_TESTS,(qw(win16 win3x win31 win95 win98 winnt windows win32 win2k winxp win2k3 winvista winme dotnet mac macosx mac68k macppc os2 unix sun sun4 sun5 suni86 irix irix5 irix6 hpux hpux9 hpux10 aix aix1 aix2 aix3 aix4 linux sco unixware mpras reliant dec sinix freebsd bsd vms x11 amiga));
 
 # Devices
 push @ALL_TESTS,(qw(palm audrey iopener wap blackberry));
@@ -304,13 +304,15 @@ sub _test {
 			index($ua,"nt3") != -1);
   $tests->{WIN2K}    = (index($ua,"nt 5.0") != -1 || index($ua,"nt5") != -1);
   $tests->{WINXP}    = (index($ua,"nt 5.1") != -1 );
+  $tests->{WIN2K3}   = (index($ua,"nt 5.2") != -1 );
+  $tests->{WINVISTA} = (index($ua,"nt 6.0") != -1 );
   $tests->{DOTNET}   = (index($ua,".net clr") != -1);
   
   $tests->{WINME}    = (index($ua,"win 9x 4.90") != -1); # whatever
   $tests->{WIN32}    = (($tests->{WIN95} || $tests->{WIN98} || $tests->{WINME} || $tests->{WINNT} || 
-			 $tests->{WIN2K}) || $tests->{WINXP} || index($ua,"win32") != -1);
+			 $tests->{WIN2K}) || $tests->{WINXP} ||  $tests->{WIN2K3} || $tests->{WINVISTA} || index($ua,"win32") != -1);
   $tests->{WINDOWS}  = (($tests->{WIN16} || $tests->{WIN31} || $tests->{WIN95} || $tests->{WIN98} ||
-			 $tests->{WINNT} || $tests->{WIN32} || $tests->{WIN2K} || $tests->{WINME}) || index($ua,"win") != -1);
+			 $tests->{WINNT} || $tests->{WIN32} || $tests->{WIN2K} || $tests->{WINXP} || $tests->{WIN2K3} || $tests->{WINVISTA} || $tests->{WINME}) || index($ua,"win") != -1);
   
   # Mac operating systems
   
@@ -416,6 +418,8 @@ sub os_string {
         $os_string = 'WinNT' if $self->winnt;
         $os_string = 'Win2k' if $self->win2k;
         $os_string = 'WinXP' if $self->winxp;
+        $os_string = 'Win2k3' if $self->win2k3;
+        $os_string = 'WinVista' if $self->winvista;
         $os_string = 'Mac' if $self->mac;
         $os_string = 'Mac OS X' if $self->macosx;
         $os_string = 'Win3x' if $self->win3x;
@@ -604,7 +608,7 @@ is considered a type of winnt, which is a type of win32)
     win32 
         winme win95 win98
         winnt
-            win2k winxp
+            win2k winxp win2k3 winvista
   dotnet
   
   mac 
@@ -631,7 +635,7 @@ On Opera 3.0, the userAgent string includes "Windows 95/NT4" on all Win32, so yo
 Returns one of the following strings, or undef.  This method exists solely for compatibility with the
 B<HTTP::Headers::UserAgent> module.
 
-  Win95, Win98, WinNT, Win2K, WinXP, Mac, Mac OS X, Win3x, OS2, Unix, Linux
+  Win95, Win98, WinNT, Win2K, WinXP, Win2K3, WinVista, Mac, Mac OS X, Win3x, OS2, Unix, Linux
 
 =back
 
