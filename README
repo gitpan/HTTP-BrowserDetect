@@ -2,6 +2,9 @@ NAME
     HTTP::BrowserDetect - Determine the Web browser, version, and platform
     from an HTTP user agent string
 
+VERSION
+    Version 1.00
+
 SYNOPSIS
         use HTTP::BrowserDetect;
 
@@ -25,7 +28,7 @@ SYNOPSIS
         if ($browser->version() > 4) {
           ...;
         }
-    
+
         # Process a different user agent string
         $browser->user_agent($another_user_agent_string);
 
@@ -39,7 +42,6 @@ DESCRIPTION
     http://www.mozilla.org/docs/web-developer/sniffer/browser_type.html.
 
   CREATING A NEW BROWSER DETECT OBJECT AND SETTING THE USER AGENT STRING
-
     new HTTP::BrowserDetect($user_agent_string)
         The constructor may be called with a user agent string specified.
         Otherwise, it will use the value specified by
@@ -59,7 +61,6 @@ DESCRIPTION
         HTTP::BrowserDetect object each time.
 
   DETECTING BROWSER VERSION
-
     major($major)
         Returns the integer portion of the browser version. If passed a
         parameter, returns true if it equals the browser major version.
@@ -90,30 +91,29 @@ DESCRIPTION
         beta version. If the beta starts with a dot, it is thrown away.
 
   DETECTING OS PLATFORM AND VERSION
-
     The following methods are available, each returning a true or false
     value. Some methods also test for the operating system version. The
     indentations below show the hierarchy of tests (for example, win2k is
     considered a type of winnt, which is a type of win32)
 
-      windows 
-        win16 win3x win31  
-        win32 
+      windows
+        win16 win3x win31
+        win32
             winme win95 win98
             winnt
-                win2k winxp
+                win2k winxp win2k3 winvista
       dotnet
-  
-      mac 
+
+      mac
         mac68k macppc macosx
-  
+
       os2
-  
-      unix 
-        sun sun4 sun5 suni86 irix irix5 irix6 hpux hpux9 hpux10 
-        aix aix1 aix2 aix3 aix4 linux sco unixware mpras reliant 
+
+      unix
+        sun sun4 sun5 suni86 irix irix5 irix6 hpux hpux9 hpux10
+        aix aix1 aix2 aix3 aix4 linux sco unixware mpras reliant
         dec sinix freebsd bsd
-  
+
       vms
 
       amiga
@@ -126,21 +126,21 @@ DESCRIPTION
         Returns one of the following strings, or undef. This method exists
         solely for compatibility with the HTTP::Headers::UserAgent module.
 
-          Win95, Win98, WinNT, Win2K, WinXP, Mac, Mac OS X, Win3x, OS2, Unix, Linux
+          Win95, Win98, WinNT, Win2K, WinXP, Win2K3, WinVista, Mac, Mac OS X, Win3x, OS2, Unix, Linux
 
   DETECTING BROWSER VENDOR
-
     The following methods are available, each returning a true or false
     value. Some methods also test for the browser version, saving you from
     checking the version separately.
 
       netscape nav2 nav3 nav4 nav4up nav45 nav45up navgold nav6 nav6up
-      gecko 
+      gecko
       mozilla
-      firefox 
+      firefox
       safari
-      ie ie3 ie4 ie4up ie5 ie55 ie6
-      neoplanet neoplanet2 
+      chrome
+      ie ie3 ie4 ie4up ie5 ie55 ie6 ie7 ie8
+      neoplanet neoplanet2
       mosaic
       aol aol3 aol4 aol5 aol6
       webtv
@@ -172,4 +172,100 @@ DESCRIPTION
         engine. If no Gecko browser is being used, or the version number
         can't be detected, returns undef.
 
-  DETECTING OTHER
+  DETECTING OTHER DEVICES
+    The following methods are available, each returning a true or false
+    value.
+
+      wap
+      audrey
+      iopener
+      palm
+      avantgo
+      blackberry
+
+  DETECTING ROBOTS
+    robot()
+        Returns true if the user agent appears to be a robot, spider,
+        crawler, or other automated Web client.
+
+        The following additional methods are available, each returning a
+        true or false value. This is by no means a complete list of robots
+        that exist on the Web.
+
+          wget
+          getright
+          yahoo
+          altavista
+          lycos
+          infoseek
+          lwp
+          webcrawler
+          linkexchange
+          slurp
+          google
+
+AUTHOR
+    Lee Semel, lee@semel.net (Original Author)
+
+    Peter Walsham (co-maintainer)
+
+    Olaf Alders, "olaf at wundercounter.com" (co-maintainer)
+
+ACKNOWLEDGEMENTS
+    Thanks to the following for their contributions:
+
+    Leonardo Herrera
+
+    Denis F. Latypoff http://rt.cpan.org/Public/Bug/Display.html?id=47271
+
+SEE ALSO
+    "The Ultimate JavaScript Client Sniffer, Version 3.0",
+    http://www.mozilla.org/docs/web-developer/sniffer/browser_type.html.
+
+    "Browser ID (User-Agent) Strings"
+    http://www.zytrax.com/tech/web/browser_ids.htm
+
+    perl(1), HTTP::Headers, HTTP::Headers::UserAgent.
+
+SUPPORT
+    You can find documentation for this module with the perldoc command.
+
+        perldoc HTTP::BrowserDetect
+
+    You can also look for information at:
+
+    *   GitHub Source Repository
+
+        <http://github.com/oalders/http-browserdetect>
+
+    *   RT: CPAN's request tracker
+
+        <http://rt.cpan.org/NoAuth/Bugs.html?Dist=HTTP-BrowserDetect>
+
+    *   AnnoCPAN: Annotated CPAN documentation
+
+        <http://annocpan.org/dist/HTTP-BrowserDetect>
+
+    *   CPAN Ratings
+
+        <http://cpanratings.perl.org/d/HTTP-BrowserDetect>
+
+    *   Search CPAN
+
+        <http://search.cpan.org/dist/HTTP-BrowserDetect/>
+
+COPYRIGHT
+    Copyright 1999-2009 Lee Semel. All rights reserved. This program is free
+    software; you can redistribute it and/or modify it under the same terms
+    as Perl itself.
+
+POD ERRORS
+    Hey! The above document had some coding errors, which are explained
+    below:
+
+    Around line 721:
+        '=item' outside of any '=over'
+
+    Around line 742:
+        You forgot a '=back' before '=head1'
+
