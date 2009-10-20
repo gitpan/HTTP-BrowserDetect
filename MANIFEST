@@ -1,7 +1,8 @@
-BrowserDetect.pm
+Build.PL
 Changes
-Makefile.PL
+lib/HTTP/BrowserDetect.pm
 MANIFEST
-test.pl
 README
-META.yml                                 Module meta-data (added by MakeMaker)
+t/01-detect.t
+Makefile.PL
+META.yml
