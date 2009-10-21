@@ -7,7 +7,7 @@ require Exporter;
 @ISA	   = qw(Exporter);
 @EXPORT	   = qw();
 @EXPORT_OK = qw();
-$VERSION   = '1.01';
+$VERSION   = '1.02';
 
 # Operating Systems
 push @ALL_TESTS,(qw(win16 win3x win31 win95 win98 winnt windows win32 win2k winxp win2k3 winvista winme dotnet mac macosx mac68k macppc os2 unix sun sun4 sun5 suni86 irix irix5 irix6 hpux hpux9 hpux10 aix aix1 aix2 aix3 aix4 linux sco unixware mpras reliant dec sinix freebsd bsd vms x11 amiga));
@@ -124,14 +124,15 @@ sub _test {
 
   # Mozilla browsers
 
-  $tests->{GECKO}     = (index($ua,"gecko") != -1);
+  $tests->{GECKO}     = (index($ua,"gecko") != -1) && (index($ua, "khtml, like gecko") == -1 );
   $tests->{FIREFOX}   = (index($ua,"firefox") != -1) ||
                         (index($ua,"firebird") != -1) ||
                         (index($ua,"iceweasel") != -1) ||
                         (index($ua,"phoenix") != -1);
 
   $tests->{CHROME}    = (index($ua,"chrome") != -1);
-  $tests->{SAFARI}    = (index($ua,"safari") != -1) || (index($ua,"applewebkit") != -1);
+  $tests->{SAFARI}    = ( (index($ua,"safari") != -1) || (index($ua,"applewebkit") != -1) )
+                        && (index($ua,"chrome") == -1);
 
   # Chome Version
   if ($tests->{CHROME}) {
@@ -146,22 +147,32 @@ sub _test {
   }
   # Safari Version
   elsif ($tests->{SAFARI}) {
-      my ($safari_build, $safari_minor);
-      ($safari_build,$safari_minor)    = ($ua =~ /
+      if ( index($ua,"version/") != -1 ) {
+        ($major,$minor) = ( $ua =~ m{
+                                    version/
+                                    ( [^.]* )			# Major version number is everything before first dot
+                                    \.				# The first dot
+                                    ( [^.]* )			# Minor version number is digits after first dot
+                                    }x );
+      }
+      else {
+        my ($safari_build, $safari_minor);
+        ($safari_build,$safari_minor)    = ($ua =~ /
 				    safari
 				    \/
 				    ( [^.]* )			# Major version number is everything before first dot
 				    (?:			    	# The first dot
 				    ( \d* ))?			# Minor version number is digits after first dot
 				    /x);
-    # in some obscure cases, extra characters are captured by the regex 
-    # like: Mozilla/5.0 (SymbianOS/9.1; U; en-us) AppleWebKit/413 (KHTML, like Gecko) Safari/413 UP.Link/6.3.1.15.0
-    $safari_build =~ s{ [^\d] }{}gxms;
+        # in some obscure cases, extra characters are captured by the regex
+        # like: Mozilla/5.0 (SymbianOS/9.1; U; en-us) AppleWebKit/413 (KHTML, like Gecko) Safari/413 UP.Link/6.3.1.15.0
+        $safari_build =~ s{ [^\d] }{}gxms;
 
-    $major = int($safari_build / 100);
-    $minor = int($safari_build % 100) / 100;
-    $beta = $safari_minor;
-    #print "major=$major minor=$minor beta=$beta\n";
+        $major = int($safari_build / 100);
+        $minor = int($safari_build % 100) / 100;
+        $beta = $safari_minor;
+        #print "major=$major minor=$minor beta=$beta\n";
+      }
 
   }
 
@@ -518,7 +529,7 @@ HTTP::BrowserDetect - Determine the Web browser, version, and platform from an H
 
 =head1 VERSION
 
-Version 1.01
+Version 1.02
 
 =head1 SYNOPSIS
 
@@ -778,6 +789,8 @@ david.hilton.p
 Steve Purkis
 
 Andrew McGregor
+
+Robin Smidsrod
 
 =head1 SEE ALSO
 
