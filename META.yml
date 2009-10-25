@@ -1,6 +1,6 @@
 ---
 name: HTTP-BrowserDetect
-version: 1.02
+version: 1.03
 author:
   - 'Olaf Alders <olaf@wundercounter.com>'
 abstract: Determine the Web browser, version, and platform from an HTTP user agent string
@@ -18,6 +18,6 @@ meta-spec:
 provides:
   HTTP::BrowserDetect:
     file: lib/HTTP/BrowserDetect.pm
-    version: 1.02
+    version: 1.03
 resources:
   license: http://dev.perl.org/licenses/
