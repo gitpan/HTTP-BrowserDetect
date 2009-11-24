@@ -7,28 +7,64 @@ require Exporter;
 @ISA       = qw(Exporter);
 @EXPORT    = qw();
 @EXPORT_OK = qw();
-$VERSION   = '1.03';
+$VERSION   = '1.04';
 
 # Operating Systems
-push @ALL_TESTS,
-    (
-    qw(win16 win3x win31 win95 win98 winnt windows win32 win2k winxp win2k3 winvista winme dotnet mac macosx mac68k macppc os2 unix sun sun4 sun5 suni86 irix irix5 irix6 hpux hpux9 hpux10 aix aix1 aix2 aix3 aix4 linux sco unixware mpras reliant dec sinix freebsd bsd vms x11 amiga)
-    );
+push @ALL_TESTS, qw(
+    win16   win3x       win31
+    win95   win98       winnt
+    windows win32       win2k
+    winxp   win2k3      winvista
+    winme   dotnet      mac
+    macosx  mac68k      macppc
+    os2     unix        sun
+    sun4    sun5        suni86
+    irix    irix5       irix6
+    hpux    hpux9       hpux10
+    aix     aix1        aix2
+    aix3    aix4        linux
+    sco     unixware    mpras
+    reliant dec         sinix
+    freebsd bsd         vms
+    x11     amiga       android
+);
 
 # Devices
-push @ALL_TESTS, (qw(palm audrey iopener wap blackberry));
+push @ALL_TESTS, qw(
+    palm    audrey      iopener
+    wap     blackberry  iphone
+    ipod
+);
 
 # Browsers
-push @ALL_TESTS,
-    (
-    qw(mosaic netscape nav2 nav3 nav4 nav4up nav45 nav45up nav6 nav6up navgold firefox chrome safari ie ie3 ie4 ie4up ie5 ie5up ie55 ie55up ie6 ie7 ie8 opera opera3 opera4 opera5 opera6 opera7 lynx links aol aol3 aol4 aol5 aol6 neoplanet neoplanet2 avantgo emacs mozilla gecko)
-    );
+push @ALL_TESTS, qw(
+    mosaic      netscape    nav2
+    nav3        nav4        nav4up
+    nav45       nav45up     nav6
+    nav6up      navgold     firefox
+    chrome      safari      ie
+    ie3         ie4         ie4up
+    ie5         ie5up       ie55
+    ie55up      ie6         ie7
+    ie8         opera       opera3
+    opera4      opera5      opera6
+    opera7      lynx        links
+    aol         aol3        aol4
+    aol5        aol6        neoplanet
+    neoplanet2  avantgo     emacs
+    mozilla     gecko
+);
 
 # Robots
-push @ALL_TESTS,
-    (
-    qw(puf curl wget getright robot yahoo altavista lycos infoseek lwp webcrawler linkexchange slurp webtv staroffice lotusnotes konqueror icab google java)
-    );
+push @ALL_TESTS, qw(
+    puf         curl        wget
+    getright    robot       yahoo
+    altavista   lycos       infoseek
+    lwp         webcrawler  linkexchange
+    slurp       webtv       staroffice
+    lotusnotes  konqueror   icab
+    google      java
+);
 
 # Properties
 push @ALL_TESTS, 'mobile';
@@ -86,52 +122,56 @@ sub user_agent {
 sub _test {
     my ($self) = @_;
 
+    my @ff = qw( firefox firebird iceweasel phoenix );
+    my $ff = join "|", @ff;
+
     my $ua = lc $self->{user_agent};
 
     # Browser version
     my ( $major, $minor, $beta ) = (
-        $ua =~ / \/			# Version starts with a slash
-				          [A-Za-z]*		# Eat any letters before the major version
-                                          ( [^.]* )		# Major version number is everything before the first dot
-                                          \.			# The first dot
-                                          ( [\d]* )		# Minor version number is every digit after the first dot
-                                          [\d.]*		# Throw away remaining numbers and dots
-                                          ( [^\s]* )		# Beta version string is up to next space
-                                        /x
+        $ua =~ m{
+            \/                      # Version starts with a slash
+            [A-Za-z]*               # Eat any letters before the major version
+            ( [^.]* )               # Major version number is everything before the first dot
+            \.                      # The first dot
+            ( [\d]* )               # Minor version number is every digit after the first dot
+            [\d.]*                  # Throw away remaining numbers and dots
+            ( [^\s]* )              # Beta version string is up to next space
+        }x
     );
 
     # Firefox version
-
-    if ( $ua =~ /(firefox|firebird|iceweasel|phoenix)/i ) {
-        ( undef, $major, $minor ) = (
-            $ua =~ /
-				    (firefox|firebird|iceweasel|phoenix)
-				    \/
-				    ( [^.]* )			# Major version number is everything before first dot
-				    \.			    	# The first dot
-				    ( [\d]* )			# Minor version nnumber is digits after first dot
-				    /x
-        );
+    if ( $ua =~ m{
+                ($ff)
+                \/
+                ( [^.]* )           # Major version number is everything before first dot
+                \.                  # The first dot
+                ( [\d]* )           # Minor version nnumber is digits after first dot
+            }x
+        ) {
+        $major = $2;
+        $minor = $3;
     }
 
     # IE version
-    if ( index( $ua, "compatible" ) != -1 ) {
-        ( $major, $minor, $beta ) = (
-            $ua =~ /
-				    compatible;
-				    \s*
-				    \w*				# Browser name
-				    [\s|\/]
-				    [A-Za-z]*			# Eat any letters before the major version
-				    ( [^.]* )			# Major version number is everything before first dot
-				    \.				# The first dot
-				    ( [\d]* )			# Minor version nnumber is digits after first dot
-				    [\d.]*			# Throw away remaining dots and digits
-				    ( [^;]* )			# Beta version is up to the ;
-				    ;
-				    /x
-        );
-
+    if (
+        $ua =~ m{
+                compatible;
+                \s*
+                \w*                 # Browser name
+                [\s|\/]
+                [A-Za-z]*           # Eat any letters before the major version
+                ( [^.]* )           # Major version number is everything before first dot
+                \.                  # The first dot
+                ( [\d]* )           # Minor version nnumber is digits after first dot
+                [\d.]*              # Throw away remaining dots and digits
+                ( [^;]* )           # Beta version is up to the ;
+                ;
+        }x
+    ) {
+        $major  = $1;
+        $minor  = $2;
+        $beta   = $3;
     }
 
     $major = 0 if !$major;
@@ -144,13 +184,13 @@ sub _test {
 
     $tests->{GECKO} = ( index( $ua, "gecko" ) != -1 )
         && ( index( $ua, "khtml, like gecko" ) == -1 );
-    $tests->{FIREFOX} 
-        = ( index( $ua, "firefox" ) != -1 )
-        || ( index( $ua, "firebird" ) != -1 )
-        || ( index( $ua, "iceweasel" ) != -1 )
-        || ( index( $ua, "phoenix" ) != -1 );
 
-    $tests->{CHROME} = ( index( $ua, "chrome" ) != -1 );
+    foreach my $ff ( @ff ) {
+        $tests->{FIREFOX} = ( index( $ua, $ff ) != -1 );
+        last if $tests->{FIREFOX};
+    }
+
+    $tests->{CHROME} = ( index( $ua, "chrome/" ) != -1 );
     $tests->{SAFARI}
         = (    ( index( $ua, "safari" ) != -1 )
             || ( index( $ua, "applewebkit" ) != -1 ) )
@@ -159,13 +199,13 @@ sub _test {
     # Chome Version
     if ( $tests->{CHROME} ) {
         ( $major, $minor ) = (
-            $ua =~ /
-				    chrome
-				    \/
-				    ( [^.]* )			# Major version number is everything before first dot
-				    \.		    	        # The first dot
-				    ( [^.]* )        		# Minor version number is digits after first dot
-				    /x
+            $ua =~ m{
+                chrome
+                \/
+                ( [^.]* )           # Major version number is everything before first dot
+                \.                  # The first dot
+                ( [^.]* )           # Minor version number is digits after first dot
+            }x
         );
 
         #print "major=$major minor=$minor beta=$beta\n";
@@ -176,27 +216,27 @@ sub _test {
         if ( index( $ua, "version/" ) != -1 ) {
             ( $major, $minor ) = (
                 $ua =~ m{
-                                    version/
-                                    ( [^.]* )			# Major version number is everything before first dot
-                                    \.				# The first dot
-                                    ( [^.]* )			# Minor version number is digits after first dot
-                                    }x
+                    version/
+                    ( [^.]* )       # Major version number is everything before first dot
+                    \.              # The first dot
+                    ( [^.]* )       # Minor version number is digits after first dot
+                }x
             );
         }
         else {
             my ( $safari_build, $safari_minor );
             ( $safari_build, $safari_minor ) = (
-                $ua =~ /
-				    safari
-				    \/
-				    ( [^.]* )			# Major version number is everything before first dot
-				    (?:			    	# The first dot
-				    ( \d* ))?			# Minor version number is digits after first dot
-				    /x
+                $ua =~ m{
+                    safari
+                    \/
+                    ( [^.]* )       # Major version number is everything before first dot
+                    (?:             # The first dot
+                    ( \d* ))?       # Minor version number is digits after first dot
+                }x
             );
 
-# in some obscure cases, extra characters are captured by the regex
-# like: Mozilla/5.0 (SymbianOS/9.1; U; en-us) AppleWebKit/413 (KHTML, like Gecko) Safari/413 UP.Link/6.3.1.15.0
+            # in some obscure cases, extra characters are captured by the regex
+            # like: Mozilla/5.0 (SymbianOS/9.1; U; en-us) AppleWebKit/413 (KHTML, like Gecko) Safari/413 UP.Link/6.3.1.15.0
             $safari_build =~ s{ [^\d] }{}gxms;
 
             $major = int( $safari_build / 100 );
@@ -224,13 +264,13 @@ sub _test {
         && index( $ua, "netscape" ) != -1 )
     {
         ( $major, $minor, $beta ) = (
-            $ua =~ /
-				    netscape\/
-				    ( [^.]* )			# Major version number is everything before first dot
-				    \.				# The first dot
-				    ( [\d]* )			# Minor version nnumber is digits after first dot
-                    ( [^\s]* )
-                   /x
+            $ua =~ m{
+                netscape6?\/
+                ( [^.]* )           # Major version number is everything before first dot
+                \.                  # The first dot
+                ( [\d]* )           # Minor version nnumber is digits after first dot
+                ( [^\s]* )
+            }x
         );
         $minor = 0 + ".$minor";
 
@@ -245,8 +285,8 @@ sub _test {
     $tests->{NAV45}   = ( $tests->{NETSCAPE} && $major == 4 && $minor == .5 );
     $tests->{NAV45UP} = ( $tests->{NAV4}     && $minor >= .5 )
         || ( $tests->{NETSCAPE} && $major >= 5 );
-    $tests->{NAVGOLD} = ( defined($beta) && index( $beta, "gold" ) != -1 );
-    $tests->{NAV6}   = ( $tests->{NETSCAPE} && $major == 5 );    # go figure
+    $tests->{NAVGOLD} = ( defined($beta) && index( $beta, "gold" ) != -1 );    
+    $tests->{NAV6}   = ( $tests->{NETSCAPE} && ( $major == 5 || $major == 6 ) );    # go figure
     $tests->{NAV6UP} = ( $tests->{NETSCAPE} && $major >= 5 );
 
     $tests->{MOZILLA} = ( $tests->{NETSCAPE} && $tests->{GECKO} );
@@ -359,6 +399,8 @@ sub _test {
     # Devices
 
     $tests->{BLACKBERRY} = ( index( $ua, "blackberry" ) != -1 );
+    $tests->{IPHONE}     = ( index( $ua, "iphone" ) != -1 );
+    $tests->{IPOD}       = ( index( $ua, "ipod" ) != -1 );
     $tests->{AUDREY}     = ( index( $ua, "audrey" ) != -1 );
     $tests->{IOPENER}    = ( index( $ua, "i-opener" ) != -1 );
     $tests->{AVANTGO}    = ( index( $ua, "avantgo" ) != -1 );
@@ -401,6 +443,7 @@ sub _test {
             || index( $ua, "windows ce" ) != -1
             || index( $ua, "palmsource" ) != -1
             || index( $ua, "iphone" ) != -1
+            || index( $ua, "ipod" ) != -1
             || index( $ua, "opera mini" ) != -1
             || index( $ua, "android" ) != -1
             || index( $ua, "htc_" ) != -1
@@ -412,6 +455,7 @@ sub _test {
             index( $ua, "samsung" ) != -1
             || index( $ua, "samsung" ) != -1
             || index( $ua, "zetor" ) != -1
+            || index( $ua, "android" ) != -1
     );
 
     # Operating System
@@ -548,12 +592,15 @@ sub _test {
     $tests->{VMS}
         = ( index( $ua, "vax" ) != -1 || index( $ua, "openvms" ) != -1 );
 
+    $tests->{ANDROID} = ( index( $ua, "android") != -1 );
+
     # A final try at browser version, if we haven't gotten it so far
     if ( !defined($major) || $major eq '' ) {
         if ( $ua =~ /[A-Za-z]+\/(\d+)\;/ ) {
             $major = $1;
             $minor = 0;
         }
+
     }
 
     # Gecko version
@@ -667,6 +714,43 @@ sub beta {
     }
 }
 
+sub language {
+    
+    my ( $self, $check ) = _self_or_default(@_);
+    my $parsed = $self->_language_country();
+    return $parsed->{'language'};
+    
+}
+
+sub country {
+    
+    my ( $self, $check ) = _self_or_default(@_);
+    my $parsed = $self->_language_country();
+    return $parsed->{'country'};
+    
+}
+
+
+sub _language_country {
+
+    my ( $self, $check ) = _self_or_default(@_);
+
+    if ( $self->safari ) {
+        if ( $self->major == 1 && $self->user_agent =~ m/\s ( [a-z]{2,} ) \)/xms ) {
+            return { language => uc $1 };
+        }
+        if ( $self->user_agent =~ m/([a-z]{2,})-([a-z]{2,})/xms ) {
+            return { language => uc $1, country => uc $2 };
+        }
+    }
+
+    if ( $self->user_agent =~ m/([a-z]{2,})-([A-Z]{2,})/xms ) {
+        return { language => uc $1, country => uc $2 };
+    }
+    
+    return { language => undef, country => undef };
+}
+
 1;
 
 __END__
@@ -677,7 +761,7 @@ HTTP::BrowserDetect - Determine the Web browser, version, and platform from an H
 
 =head1 VERSION
 
-Version 1.03
+Version 1.04
 
 =head1 SYNOPSIS
 
@@ -696,9 +780,9 @@ Version 1.03
     print $browser->netscape;
     print $browser->ie;
     if (browser->major(4)) {
-	if ($browser->minor() > .5) {
-	    ...
-	}
+    if ($browser->minor() > .5) {
+        ...
+    }
     }
     if ($browser->version() > 4) {
       ...;
@@ -734,6 +818,8 @@ you may call HTTP::BrowserDetect::method_name().  You will then be
 working with a default HTTP::BrowserDetect object that is created
 behind the scenes.
 
+=head1 SUBROUTINES/METHODS
+
 =head2 user_agent($user_agent_string)
 
 Returns the value of the user agent string.  When called with a
@@ -741,6 +827,16 @@ parameter, it resets the user agent and reperforms all tests on the
 string.  This way you can process a series of user agent strings (from
 a log file, perhaps) without creating a new HTTP::BrowserDetect object
 each time.
+
+=head2 language
+
+Returns the language string as it is found in the user agent string.  This
+will be in the form of an upper case 2 character code.  ie: EN, DE, etc
+
+=head2 country
+
+Returns the country string as it may be found in the user agent string.  This
+will be in the form of an upper case 2 character code.  ie: US, DE, etc
 
 =head1 Detecting Browser Version
 
@@ -862,12 +958,15 @@ If no Gecko browser is being used, or the version number can't be detected, retu
 
 The following methods are available, each returning a true or false value.
 
-  wap
+  android
   audrey
-  iopener
-  palm
   avantgo
   blackberry
+  iopener
+  iphone
+  ipod
+  palm
+  wap
 
 =head2 mobile()
 
@@ -930,6 +1029,8 @@ Robin Smidsrod
 
 Richard Noble
 
+Josh Ritter
+
 =head1 SEE ALSO
 
 "The Ultimate JavaScript Client Sniffer, Version 3.0", B<http://www.mozilla.org/docs/web-developer/sniffer/browser_type.html>.
@@ -971,7 +1072,17 @@ L<http://search.cpan.org/dist/HTTP-BrowserDetect/>
 
 =back
 
-=head1 COPYRIGHT
+=head1 BUGS AND LIMITATIONS
+
+The biggest limitation at this point is the test suite, which really needs to
+have many more UserAgent strings to test against. It would also be much easier
+to read if the UserAgents and their test conditions were broken out into some
+sort of config file. Patches are certainly welcome, with many thanks to the
+many contributions which have already been received. The preferred method of
+patching would be to fork the GitHub repo and then send me a pull requests,
+but plain old patch files are also welcome.
+
+=head1 LICENSE AND COPYRIGHT
 
 Copyright 1999-2009 Lee Semel.  All rights reserved.  This program is free software;
 you can redistribute it and/or modify it under the same terms as Perl itself.
