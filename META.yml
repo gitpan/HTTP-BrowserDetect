@@ -1,12 +1,10 @@
 ---
 name: HTTP-BrowserDetect
-version: 1.06
+version: 1.07
 author:
   - 'Olaf Alders <olaf@wundercounter.com>'
-abstract: 'Determine the Web browser, version, and platform from an HTTP user agent string'
+abstract: Determine Web browser, version, and platform from an HTTP user agent string
 license: perl
-resources:
-  license: http://dev.perl.org/licenses/
 build_requires:
   Data::Dump: 0
   Exporter: 0
@@ -15,11 +13,13 @@ build_requires:
   YAML::Tiny: 0
 configure_requires:
   Module::Build: 0.35
-provides:
-  HTTP::BrowserDetect:
-    file: lib/HTTP/BrowserDetect.pm
-    version: 1.06
 generated_by: Module::Build version 0.35
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
+provides:
+  HTTP::BrowserDetect:
+    file: lib/HTTP/BrowserDetect.pm
+    version: 1.07
+resources:
+  license: http://dev.perl.org/licenses/
