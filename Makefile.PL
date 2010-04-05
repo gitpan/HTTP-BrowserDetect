@@ -2,17 +2,17 @@
 use ExtUtils::MakeMaker;
 WriteMakefile
 (
-          'PL_FILES' => {},
-          'INSTALLDIRS' => 'site',
           'NAME' => 'HTTP::BrowserDetect',
-          'EXE_FILES' => [],
           'VERSION_FROM' => 'lib/HTTP/BrowserDetect.pm',
           'PREREQ_PM' => {
-                           'Test::More' => 0,
-                           'YAML::Tiny' => 0,
-                           'FindBin' => 0,
                            'Data::Dump' => 0,
-                           'Exporter' => 0
-                         }
+                           'Exporter' => 0,
+                           'FindBin' => 0,
+                           'Test::More' => 0,
+                           'YAML::Tiny' => 0
+                         },
+          'INSTALLDIRS' => 'site',
+          'EXE_FILES' => [],
+          'PL_FILES' => {}
         )
 ;
