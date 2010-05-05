@@ -7,7 +7,7 @@ require Exporter;
 @ISA       = qw(Exporter);
 @EXPORT    = qw();
 @EXPORT_OK = qw();
-$VERSION   = '1.09';
+$VERSION   = '1.10';
 
 # Operating Systems
 push @ALL_TESTS, qw(
@@ -197,7 +197,7 @@ sub _test {
             || ( index( $ua, "applewebkit" ) != -1 ) )
         && ( index( $ua, "chrome" ) == -1 );
 
-    # Chome Version
+    # Chrome Version
     if ( $tests->{CHROME} ) {
         ( $major, $minor ) = (
             $ua =~ m{
@@ -346,7 +346,7 @@ sub _test {
     $tests->{LWP}
         = ( index( $ua, "libwww-perl" ) != -1 || index( $ua, "lwp-" ) != -1 );
     $tests->{YAHOO}  = ( index( $ua, "yahoo" ) != -1 );
-    $tests->{GOOGLE} = ( index( $ua, "google" ) != -1 );
+    $tests->{GOOGLE} = ( index( $ua, "googlebot" ) != -1 );
     $tests->{JAVA}
         = ( index( $ua, "java" ) != -1 || index( $ua, "jdk" ) != -1 );
     $tests->{ALTAVISTA}    = ( index( $ua, "altavista" ) != -1 );
@@ -973,7 +973,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-Version 1.09
+Version 1.10
 
 =head1 SYNOPSIS
 
@@ -984,7 +984,7 @@ Version 1.09
     # Detect operating system
     if ($browser->windows) {
       if ($browser->winnt) ...
-      if ($brorwser->win95) ...
+      if ($browser->win95) ...
     }
     print $browser->mac;
 
@@ -1223,7 +1223,7 @@ version separately.
 
 =head3 safari
 
-=head3 crhome
+=head3 chrome
 
 =head3 ie ie3 ie4 ie4up ie5 ie55 ie6 ie7 ie8
 
@@ -1382,6 +1382,8 @@ Marc Sebastian Pelzer
 Alexey Surikov
 
 Maros Kollar
+
+Jay Rifkin
 
 =head1 TO DO
 
