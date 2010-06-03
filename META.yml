@@ -19,7 +19,7 @@ name: HTTP-BrowserDetect
 provides:
   HTTP::BrowserDetect:
     file: lib/HTTP/BrowserDetect.pm
-    version: 1.10
+    version: 1.11
 resources:
   license: http://dev.perl.org/licenses/
-version: 1.10
+version: 1.11
