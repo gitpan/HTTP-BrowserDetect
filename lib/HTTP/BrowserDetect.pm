@@ -1,13 +1,15 @@
-package HTTP::BrowserDetect;
-
 use strict;
-use vars qw($VERSION @ISA @EXPORT @EXPORT_OK @ALL_TESTS);
+package HTTP::BrowserDetect;
+BEGIN {
+  $HTTP::BrowserDetect::VERSION = '1.12';
+}
+
+use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
 require Exporter;
 
 @ISA       = qw(Exporter);
 @EXPORT    = qw();
 @EXPORT_OK = qw();
-$VERSION   = '1.11';
 
 # Operating Systems
 push @ALL_TESTS, qw(
@@ -66,7 +68,8 @@ push @ALL_TESTS, qw(
     lwp         webcrawler  linkexchange
     slurp       webtv       staroffice
     lotusnotes  konqueror   icab
-    google      java
+    google      java        googlemobile
+    msn         msnmobile
 );
 
 # Properties
@@ -145,6 +148,7 @@ sub _test {
             ( [^\s]* )              # Beta version string is up to next space
         }x
     );
+    
 
     # Firefox version
     if ($ua =~ m{
@@ -167,9 +171,9 @@ sub _test {
     if ($ua =~ m{
                 compatible;
                 \s*
-                \w*                 # Browser name
+                \w*
                 [\s|\/]
-                [A-Za-z]*           # Eat any letters before the major version
+                [A-Za-z\-\/]*       # Eat any letters before the major version
                 ( [^.]* )           # Major version number is everything before first dot
                 \.                  # The first dot
                 ( [\d]* )           # Minor version nnumber is digits after first dot
@@ -182,6 +186,7 @@ sub _test {
         $major = $1;
         $minor = $2;
         $beta  = $3;
+
     }
 
     $major = 0 if !$major;
@@ -350,6 +355,9 @@ sub _test {
         = ( index( $ua, "libwww-perl" ) != -1 || index( $ua, "lwp-" ) != -1 );
     $tests->{YAHOO}  = ( index( $ua, "yahoo" ) != -1 );
     $tests->{GOOGLE} = ( index( $ua, "googlebot" ) != -1 );
+    $tests->{GOOGLEMOBILE} = ( index( $ua, "googlebot-mobile" ) != -1 );
+    $tests->{MSN} = ( (index( $ua, "msnbot" ) != -1 || index( $ua, "bingbot" )) != -1 );
+    $tests->{MSNMOBILE} = ( (index( $ua, "msnbot-mobile" ) != -1 || index( $ua, "bingbot-mobile" )) != -1 );
     $tests->{JAVA}
         = ( index( $ua, "java" ) != -1 || index( $ua, "jdk" ) != -1 );
     $tests->{ALTAVISTA}    = ( index( $ua, "altavista" ) != -1 );
@@ -372,6 +380,9 @@ sub _test {
                 || $tests->{LINKEXCHANGE}
                 || $tests->{SLURP}
                 || $tests->{GOOGLE}
+                || $tests->{GOOGLEMOBILE}
+                || $tests->{MSN}
+                || $tests->{MSNMOBILE}
         )
             || index( $ua, "bot" ) != -1
             || index( $ua, "spider" ) != -1
@@ -456,6 +467,8 @@ sub _test {
             || index( $ua, "samsung" ) != -1
             || index( $ua, "zetor" ) != -1
             || index( $ua, "android" ) != -1
+            || index( $ua, "symbos" ) != -1
+            || index( $ua, "opera mobi" ) != -1
             || $tests->{PSP}
     );
 
@@ -987,7 +1000,9 @@ sub _format_minor {
 
 1;
 
-__END__
+
+
+=pod
 
 =head1 NAME
 
@@ -995,13 +1010,13 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-Version 1.11
+version 1.12
 
 =head1 SYNOPSIS
 
     use HTTP::BrowserDetect;
 
-    my $browser = new HTTP::BrowserDetect($user_agent_string);
+    my $browser = HTTP::BrowserDetect->new($user_agent_string);
 
     # Detect operating system
     if ($browser->windows) {
@@ -1024,8 +1039,6 @@ Version 1.11
 
     # Process a different user agent string
     $browser->user_agent($another_user_agent_string);
-
-
 
 =head1 DESCRIPTION
 
@@ -1108,7 +1121,6 @@ in the interest of "bugwards compatibility", but in almost all cases, the
 numbers returned by public_version(), public_major() and public_minor() will
 be what you are looking for.
 
-
 =head2 public_version()
 
 Returns the browser version as a floating-point number.
@@ -1157,7 +1169,6 @@ the version number. For instance, if the user agent string is 'Mozilla/4.0
 (compatible; MSIE 5.0b2; Windows NT)', returns 'b2'. If passed a parameter,
 returns true if equal to the beta version. If the beta starts with a dot, it
 is thrown away.
-
 
 =head1 Detecting Rendering Engine
 
@@ -1288,7 +1299,6 @@ number 5. The nav6 and nav6up methods correctly handle this quirk. The firefox
 text correctly detects the older-named versions of the browser (Phoenix,
 Firebird)
 
-
 =head2 browser_string()
 
 Returns undef on failure.  Otherwise returns one of the following:
@@ -1368,10 +1378,13 @@ value. This is by no means a complete list of robots that exist on the Web.
 
 =head3 google
 
+=head3 googlemobile
+
+=head3 msn (same as bing)
+
 =head3 puf
 
-
-=head1 AUTHOR
+=head1 CREDITS
 
 Lee Semel, lee@semel.net (Original Author)
 
@@ -1417,6 +1430,8 @@ Maros Kollar
 
 Jay Rifkin
 
+Luke Saunders
+
 =head1 TO DO
 
 The _engine() method currently only handles Gecko.  It needs to be expanded to
@@ -1442,7 +1457,6 @@ perl(1), L<HTTP::Headers>, L<HTTP::Headers::UserAgent>.
 You can find documentation for this module with the perldoc command.
 
     perldoc HTTP::BrowserDetect
-
 
 You can also look for information at:
 
@@ -1475,15 +1489,26 @@ L<http://search.cpan.org/dist/HTTP-BrowserDetect/>
 The biggest limitation at this point is the test suite, which really needs to
 have many more UserAgent strings to test against.
 
-Patches are certainly welcome, with many thanks to the many contributions
-which have already been received. The preferred method of patching would be to
-fork the GitHub repo and then send me a pull requests, but plain old patch
-files are also welcome.
+Patches are certainly welcome, with many thanks for the excellent
+contributions which have already been received. The preferred method of
+patching would be to fork the GitHub repo and then send me a pull requests,
+but plain old patch files are also welcome.
 
-=head1 LICENSE AND COPYRIGHT
+=head1 AUTHOR
 
-Copyright 1999-2010 Lee Semel. All rights reserved. This program is free
-software; you can redistribute it and/or modify it under the same terms as
-Perl itself.
+Olaf Alders <olaf@wundercounter.com> (current maintainer)
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Lee Semel.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
+
+
+__END__
+
+# ABSTRACT: Determine Web browser, version, and platform from an HTTP user agent string
+
