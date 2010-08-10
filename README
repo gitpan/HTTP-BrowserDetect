@@ -3,7 +3,7 @@ NAME
     an HTTP user agent string
 
 VERSION
-    version 1.12
+    version 1.13
 
 SYNOPSIS
         use HTTP::BrowserDetect;
@@ -347,6 +347,8 @@ ACKNOWLEDGEMENTS
     Jay Rifkin
 
     Luke Saunders
+
+    Jacob Rask
 
 TO DO
     The _engine() method currently only handles Gecko. It needs to be

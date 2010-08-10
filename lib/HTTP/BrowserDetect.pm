@@ -1,7 +1,7 @@
 use strict;
 package HTTP::BrowserDetect;
 BEGIN {
-  $HTTP::BrowserDetect::VERSION = '1.12';
+  $HTTP::BrowserDetect::VERSION = '1.13';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -187,6 +187,15 @@ sub _test {
         $minor = $2;
         $beta  = $3;
 
+    }
+    
+    # Opera needs to be dealt with specifically
+    # http://dev.opera.com/articles/view/opera-ua-string-changes/
+    # Opera/9.80 (S60; SymbOS; Opera Mobi/320; U; sv) Presto/2.4.15 Version/10.00
+    
+    if ( $ua =~ m{\AOpera.*\sVersion/(\d*)\.(\d*)\z}i) {
+        $major = $1;
+        $minor = $2;
     }
 
     $major = 0 if !$major;
@@ -469,6 +478,7 @@ sub _test {
             || index( $ua, "android" ) != -1
             || index( $ua, "symbos" ) != -1
             || index( $ua, "opera mobi" ) != -1
+            || index( $ua, "fennec" ) != -1
             || $tests->{PSP}
     );
 
@@ -1010,7 +1020,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.12
+version 1.13
 
 =head1 SYNOPSIS
 
@@ -1431,6 +1441,8 @@ Maros Kollar
 Jay Rifkin
 
 Luke Saunders
+
+Jacob Rask
 
 =head1 TO DO
 
