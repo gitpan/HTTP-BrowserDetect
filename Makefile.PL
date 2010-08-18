@@ -31,7 +31,7 @@ my %WriteMakefileArgs = (
     'Exporter' => '0',
     'vars' => '0'
   },
-  'VERSION' => '1.13',
+  'VERSION' => '1.14',
   'test' => {
     'TESTS' => 't/*.t'
   }

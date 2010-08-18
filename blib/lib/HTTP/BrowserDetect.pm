@@ -1,15 +1,13 @@
-use strict;
 package HTTP::BrowserDetect;
-BEGIN {
-  $HTTP::BrowserDetect::VERSION = '1.14';
-}
 
-use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
+use strict;
+use vars qw($VERSION @ISA @EXPORT @EXPORT_OK @ALL_TESTS);
 require Exporter;
 
 @ISA       = qw(Exporter);
 @EXPORT    = qw();
 @EXPORT_OK = qw();
+$VERSION   = '1.10';
 
 # Operating Systems
 push @ALL_TESTS, qw(
@@ -29,15 +27,14 @@ push @ALL_TESTS, qw(
     reliant dec         sinix
     freebsd bsd         vms
     x11     amiga       android
-    win7    ps3gameos   pspgameos
+    win7
 );
 
 # Devices
 push @ALL_TESTS, qw(
     palm    audrey      iopener
     wap     blackberry  iphone
-    ipod    ipad        ps3
-    psp
+    ipod    ipad
 );
 
 # Browsers
@@ -57,7 +54,7 @@ push @ALL_TESTS, qw(
     aol5        aol6        neoplanet
     neoplanet2  avantgo     emacs
     mozilla     gecko       r1
-    iceweasel   netfront
+    iceweasel
 );
 
 # Robots
@@ -68,8 +65,7 @@ push @ALL_TESTS, qw(
     lwp         webcrawler  linkexchange
     slurp       webtv       staroffice
     lotusnotes  konqueror   icab
-    google      java        googlemobile
-    msn         msnmobile
+    google      java
 );
 
 # Properties
@@ -149,7 +145,6 @@ sub _test {
         }x
     );
 
-
     # Firefox version
     if ($ua =~ m{
                 ($ff)
@@ -171,9 +166,9 @@ sub _test {
     if ($ua =~ m{
                 compatible;
                 \s*
-                \w*
+                \w*                 # Browser name
                 [\s|\/]
-                [A-Za-z\-\/]*       # Eat any letters before the major version
+                [A-Za-z]*           # Eat any letters before the major version
                 ( [^.]* )           # Major version number is everything before first dot
                 \.                  # The first dot
                 ( [\d]* )           # Minor version nnumber is digits after first dot
@@ -186,16 +181,6 @@ sub _test {
         $major = $1;
         $minor = $2;
         $beta  = $3;
-
-    }
-
-    # Opera needs to be dealt with specifically
-    # http://dev.opera.com/articles/view/opera-ua-string-changes/
-    # Opera/9.80 (S60; SymbOS; Opera Mobi/320; U; sv) Presto/2.4.15 Version/10.00
-
-    if ( $ua =~ m{\AOpera.*\sVersion/(\d*)\.(\d*)\z}i) {
-        $major = $1;
-        $minor = $2;
     }
 
     $major = 0 if !$major;
@@ -246,16 +231,9 @@ sub _test {
 # like: Mozilla/5.0 (SymbianOS/9.1; U; en-us) AppleWebKit/413 (KHTML, like Gecko) Safari/413 UP.Link/6.3.1.15.0
         $safari_build =~ s{ [^\d] }{}gxms;
 
-        # ignore digits after 2nd dot
-        if ( !$safari_build && $ua =~ m{applewebkit\/([\d\.]{1,})}xi ) {
-            ( $safari_build, $safari_minor ) = split /\./, $1;
-        }
-
-        if ( $safari_build ) {
-            $major = int( $safari_build / 100 );
-            $minor = int( $safari_build % 100 ) / 100;
-            $beta  = $safari_minor;
-        }
+        $major = int( $safari_build / 100 );
+        $minor = int( $safari_build % 100 ) / 100;
+        $beta  = $safari_minor;
 
     }
 
@@ -268,9 +246,7 @@ sub _test {
             && index( $ua, "compatible" ) == -1
             && index( $ua, "opera" ) == -1
             && index( $ua, "webtv" ) == -1
-            && index( $ua, "hotjava" ) == -1
-            && index( $ua, "playstation 3" ) == -1
-            && index( $ua, "playstation portable" ) == -1 );
+            && index( $ua, "hotjava" ) == -1 );
 
     if (   $tests->{GECKO}
         && $tests->{NETSCAPE}
@@ -371,9 +347,6 @@ sub _test {
         = ( index( $ua, "libwww-perl" ) != -1 || index( $ua, "lwp-" ) != -1 );
     $tests->{YAHOO}  = ( index( $ua, "yahoo" ) != -1 );
     $tests->{GOOGLE} = ( index( $ua, "googlebot" ) != -1 );
-    $tests->{GOOGLEMOBILE} = ( index( $ua, "googlebot-mobile" ) != -1 );
-    $tests->{MSN} = ( (index( $ua, "msnbot" ) != -1 || index( $ua, "bingbot" )) != -1 );
-    $tests->{MSNMOBILE} = ( (index( $ua, "msnbot-mobile" ) != -1 || index( $ua, "bingbot-mobile" )) != -1 );
     $tests->{JAVA}
         = ( index( $ua, "java" ) != -1 || index( $ua, "jdk" ) != -1 );
     $tests->{ALTAVISTA}    = ( index( $ua, "altavista" ) != -1 );
@@ -396,9 +369,6 @@ sub _test {
                 || $tests->{LINKEXCHANGE}
                 || $tests->{SLURP}
                 || $tests->{GOOGLE}
-                || $tests->{GOOGLEMOBILE}
-                || $tests->{MSN}
-                || $tests->{MSNMOBILE}
         )
             || index( $ua, "bot" ) != -1
             || index( $ua, "spider" ) != -1
@@ -414,10 +384,6 @@ sub _test {
             || index( $ua, "fetch" ) != -1
             || index( $ua, "ia_archive" ) != -1
             || index( $ua, "zyborg" ) != -1
-    );
-    $tests->{NETFRONT} = (
-           index( $ua, "playstation 3" ) != -1
-        || index( $ua, "playstation portable" ) != -1
     );
 
     # Devices
@@ -445,8 +411,6 @@ sub _test {
             || index( $ua, "wap" ) == 0
             || index( $ua, "wapper" ) != -1
             || index( $ua, "zetor" ) != -1 );
-    $tests->{PS3} = ( index( $ua, "playstation 3" ) != -1 );
-    $tests->{PSP} = ( index( $ua, "playstation portable" ) != -1 );
 
     $tests->{MOBILE} = (
                index( $ua, "up.browser" ) != -1
@@ -483,10 +447,6 @@ sub _test {
             || index( $ua, "samsung" ) != -1
             || index( $ua, "zetor" ) != -1
             || index( $ua, "android" ) != -1
-            || index( $ua, "symbos" ) != -1
-            || index( $ua, "opera mobi" ) != -1
-            || index( $ua, "fennec" ) != -1
-            || $tests->{PSP}
     );
 
     # Operating System
@@ -627,9 +587,6 @@ sub _test {
 
     $tests->{ANDROID} = ( index( $ua, "android" ) != -1 );
 
-    $tests->{PS3GAMEOS} = $tests->{PS3} && $tests->{NETFRONT};
-    $tests->{PSPGAMEOS} = $tests->{PSP} && $tests->{NETFRONT};
-
     # A final try at browser version, if we haven't gotten it so far
     if ( !defined( $major ) || $major eq '' ) {
         if ( $ua =~ /[A-Za-z]+\/(\d+)\;/ ) {
@@ -685,7 +642,6 @@ sub browser_string {
         $browser_string = 'IceWeasel'   if $self->iceweasel;
         $browser_string = 'curl'        if $self->curl;
         $browser_string = 'puf'         if $self->puf;
-        $browser_string = 'NetFront'    if $self->netfront;
     }
     return $browser_string;
 }
@@ -709,8 +665,6 @@ sub os_string {
         $os_string = 'OS2'      if $self->os2;
         $os_string = 'Unix'     if $self->unix && !$self->linux;
         $os_string = 'Linux'    if $self->linux;
-        $os_string = 'Playstation 3 GameOS' if $self->ps3gameos;
-        $os_string = 'Playstation Portable GameOS' if $self->pspgameos;
     }
     return $os_string;
 }
@@ -851,10 +805,6 @@ sub engine_string {
         return 'MSIE';
     }
 
-    if( $self->netfront ) {
-        return 'NetFront';
-    }
-
     return;
 }
 
@@ -941,7 +891,7 @@ sub device {
     my ( $self, $check ) = _self_or_default( @_ );
 
     my @devices = qw(
-        blackberry  iphone  ipod    ipad  ps3  psp
+        blackberry  iphone  ipod    ipad
     );
 
     foreach my $device ( @devices ) {
@@ -960,8 +910,6 @@ sub device_name {
         iphone => 'iPhone',
         ipod => 'iPod',
         ipad => 'iPad',
-        psp  => 'Sony PlayStation Portable',
-        ps3  => 'Sony PlayStation 3',
     );
 
     my $device = $self->device;
@@ -1017,9 +965,7 @@ sub _format_minor {
 
 1;
 
-
-
-=pod
+__END__
 
 =head1 NAME
 
@@ -1027,13 +973,13 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.14
+Version 1.10
 
 =head1 SYNOPSIS
 
     use HTTP::BrowserDetect;
 
-    my $browser = HTTP::BrowserDetect->new($user_agent_string);
+    my $browser = new HTTP::BrowserDetect($user_agent_string);
 
     # Detect operating system
     if ($browser->windows) {
@@ -1056,6 +1002,8 @@ version 1.14
 
     # Process a different user agent string
     $browser->user_agent($another_user_agent_string);
+
+
 
 =head1 DESCRIPTION
 
@@ -1138,6 +1086,7 @@ in the interest of "bugwards compatibility", but in almost all cases, the
 numbers returned by public_version(), public_major() and public_minor() will
 be what you are looking for.
 
+
 =head2 public_version()
 
 Returns the browser version as a floating-point number.
@@ -1187,13 +1136,14 @@ the version number. For instance, if the user agent string is 'Mozilla/4.0
 returns true if equal to the beta version. If the beta starts with a dot, it
 is thrown away.
 
+
 =head1 Detecting Rendering Engine
 
 =head2 engine_string()
 
 Returns one of the following:
 
-Gecko, KHTML, MSIE, NetFront
+Gecko, KHTML, MSIE
 
 Returns undef if no string can be found.
 
@@ -1245,10 +1195,6 @@ mac68k macppc macosx
 
 =head2 amiga()
 
-=head2 ps3gameos()
-
-=head2 pspgameos()
-
 It may not be possibile to detect Win98 in Netscape 4.x and earlier. On Opera
 3.0, the userAgent string includes "Windows 95/NT4" on all Win32, so you can't
 distinguish between Win95 and WinNT.
@@ -1259,7 +1205,7 @@ Returns one of the following strings, or undef. This method exists solely for
 compatibility with the L<HTTP::Headers::UserAgent> module.
 
   Win95, Win98, WinNT, Win2K, WinXP, Win2K3, WinVista, Win7, Mac, Mac OS X,
-  Win3x, OS2, Unix, Linux, Playstation 3 GameOS, Playstation Portable GameOS
+  Win3x, OS2, Unix, Linux
 
 =head1 Detecting Browser Vendor
 
@@ -1309,12 +1255,11 @@ version separately.
 
 =head3 realplayer
 
-=head3 netfront
-
 Netscape 6, even though its called six, in the userAgent string has version
 number 5. The nav6 and nav6up methods correctly handle this quirk. The firefox
 text correctly detects the older-named versions of the browser (Phoenix,
 Firebird)
+
 
 =head2 browser_string()
 
@@ -1357,10 +1302,6 @@ The following methods are available, each returning a true or false value.
 
 =head3 wap
 
-=head3 psp
-
-=head3 ps3
-
 =head2 mobile()
 
 Returns true if the browser appears to belong to a handheld device.
@@ -1395,13 +1336,10 @@ value. This is by no means a complete list of robots that exist on the Web.
 
 =head3 google
 
-=head3 googlemobile
-
-=head3 msn (same as bing)
-
 =head3 puf
 
-=head1 CREDITS
+
+=head1 AUTHOR
 
 Lee Semel, lee@semel.net (Original Author)
 
@@ -1447,10 +1385,6 @@ Maros Kollar
 
 Jay Rifkin
 
-Luke Saunders
-
-Jacob Rask
-
 =head1 TO DO
 
 The _engine() method currently only handles Gecko.  It needs to be expanded to
@@ -1476,6 +1410,7 @@ perl(1), L<HTTP::Headers>, L<HTTP::Headers::UserAgent>.
 You can find documentation for this module with the perldoc command.
 
     perldoc HTTP::BrowserDetect
+
 
 You can also look for information at:
 
@@ -1508,26 +1443,15 @@ L<http://search.cpan.org/dist/HTTP-BrowserDetect/>
 The biggest limitation at this point is the test suite, which really needs to
 have many more UserAgent strings to test against.
 
-Patches are certainly welcome, with many thanks for the excellent
-contributions which have already been received. The preferred method of
-patching would be to fork the GitHub repo and then send me a pull requests,
-but plain old patch files are also welcome.
+Patches are certainly welcome, with many thanks to the many contributions
+which have already been received. The preferred method of patching would be to
+fork the GitHub repo and then send me a pull requests, but plain old patch
+files are also welcome.
 
-=head1 AUTHOR
+=head1 LICENSE AND COPYRIGHT
 
-Olaf Alders <olaf@wundercounter.com> (current maintainer)
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2010 by Lee Semel.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
+Copyright 1999-2010 Lee Semel. All rights reserved. This program is free
+software; you can redistribute it and/or modify it under the same terms as
+Perl itself.
 
 =cut
-
-
-__END__
-
-# ABSTRACT: Determine Web browser, version, and platform from an HTTP user agent string
-

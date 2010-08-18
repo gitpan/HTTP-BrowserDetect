@@ -7,10 +7,13 @@ META.yml
 Makefile.PL
 README
 TODO
+blib/lib/HTTP/BrowserDetect.pm
+blib/libdoc/HTTP::BrowserDetect.3
 dist.ini
 lib/HTTP/BrowserDetect.pm
 t/01-detect.t
 t/author-critic.t
+t/create_config.pl
 t/release-pod-coverage.t
 t/release-pod-syntax.t
 t/useragents.yaml
