@@ -7,8 +7,6 @@ META.yml
 Makefile.PL
 README
 TODO
-blib/lib/HTTP/BrowserDetect.pm
-blib/libdoc/HTTP::BrowserDetect.3
 dist.ini
 lib/HTTP/BrowserDetect.pm
 t/01-detect.t
