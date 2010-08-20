@@ -25,19 +25,26 @@ foreach my $test ( @tests ) {
         }
     }
 
-    foreach my $method (
-        'major',   'minor', 'engine_major', 'engine_minor',
-        'version', 'engine_version',
-        )
+    foreach my $method (qw(
+        public_version
+        public_major
+        public_minor
+        version
+        major
+        minor
+        engine_version
+        engine_major
+        engine_minor
+        ))
     {
-        if ( exists $test->{$method} && $test->{$method} ) {
+        if ( exists $test->{$method} and defined $test->{$method} and length $test->{$method} ) {
             cmp_ok( $detected->$method, '==', $test->{$method},
                 "$method: $test->{$method}" );
         }
     }
 
     foreach my $method ( 'language', 'device', 'device_name' ) {
-        if ( exists $test->{$method} && $test->{$method} ) {
+        if ( exists $test->{$method} and defined $test->{$method} and length $test->{$method} ) {
             cmp_ok( $detected->$method, 'eq', $test->{$method},
                 "$method: $test->{$method}" );
         }  

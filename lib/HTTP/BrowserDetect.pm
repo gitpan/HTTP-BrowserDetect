@@ -1,7 +1,7 @@
 use strict;
 package HTTP::BrowserDetect;
 BEGIN {
-  $HTTP::BrowserDetect::VERSION = '1.15';
+  $HTTP::BrowserDetect::VERSION = '1.16';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -74,6 +74,37 @@ push @ALL_TESTS, qw(
 
 # Properties
 push @ALL_TESTS, 'mobile';
+
+
+# Safari build -> version map for versions prior to 3.0
+# (since then, version appears in the user-agent string)
+
+my %safari_build_to_version = qw(
+    48      0.8
+    51      0.8.1
+    60      0.8.2
+    73      0.9
+    74      1.0b2v74
+    85      1.0
+    85.7    1.0.2
+    85.8    1.0.3
+    100     1.1
+    100.1   1.1.1
+    125     1.2
+    125.1   1.2.1
+    125.7   1.2.2
+    125.9   1.2.3
+    125.11  1.2.4
+    312     1.3
+    312.3   1.3.1
+    312.5   1.3.2
+    412     2.0
+    412.5   2.0.1
+    416.12  2.0.2
+    417.8   2.0.3
+    419.3   2.0.4
+);
+
 
 #######################################################################################################
 # BROWSER OBJECT
@@ -223,31 +254,20 @@ sub _test {
                 ( [^.]* )           # Minor version number is digits after first dot
             }x
         );
-
-        #print "major=$major minor=$minor beta=$beta\n";
     }
 
     # Safari Version
     elsif ( $tests->{SAFARI} ) {
-
-
-        my ( $safari_build, $safari_minor );
-        ( $safari_build, $safari_minor ) = (
+        my ( $safari_build, $safari_minor ) = (
             $ua =~ m{
-                safari
-                \/
-                ( [^.]* )       # Major version number is everything before first dot
-                (?:             # The first dot
-                ( \d* ))?       # Minor version number is digits after first dot
+                safari/
+                ( \d+ )       # Major version number
+                ( \. \d+ )?   # Minor version number is dot and following digits
             }x
         );
 
-# in some obscure cases, extra characters are captured by the regex
-# like: Mozilla/5.0 (SymbianOS/9.1; U; en-us) AppleWebKit/413 (KHTML, like Gecko) Safari/413 UP.Link/6.3.1.15.0
-        $safari_build =~ s{ [^\d] }{}gxms;
-
-        # ignore digits after 2nd dot
         if ( !$safari_build && $ua =~ m{applewebkit\/([\d\.]{1,})}xi ) {
+            # ignore digits after 2nd dot
             ( $safari_build, $safari_minor ) = split /\./, $1;
         }
 
@@ -256,7 +276,6 @@ sub _test {
             $minor = int( $safari_build % 100 ) / 100;
             $beta  = $safari_minor;
         }
-
     }
 
     # Gecko-powered Netscape (i.e. Mozilla) versions
@@ -806,31 +825,51 @@ sub public_minor {
 }
 
 sub public_beta {
-
     my ( $self, $check ) = _self_or_default( @_ );
-    return $self->beta( $check );
+    my ( $major, $minor, $beta ) = $self->_public;
 
+    return $beta;
 }
 
 sub _public {
     my ( $self, $check ) = _self_or_default( @_ );
 
-    my $ua = $self->user_agent;
+    # Return Public version of Safari. See RT #48727.
+    if ($self->safari) {
+        my $ua = lc $self->user_agent;
 
-    # this is the Public version of Safari.  See RT #48727
-    if ( $self->safari && $ua =~ m{
+        # Safari starting with version 3.0 provides its own public version
+        if ( $ua =~ m{
                 version/
-                ( [^.]* )       # Major version number is everything before first dot
-                \.              # The first dot
-                ( [^.]* )       # Minor version number is digits after first dot
+                ( \d+ )       # Major version number is everything before first dot
+                ( \. \d+ )?   # Minor version number is first dot and following digits
             }x
-        )
-    {
-        return ( $1, $2 );
+            )
+        {
+            return ($1, $2, undef);
+        }
+
+        # Safari before version 3.0 had only build numbers;
+        # use a lookup table provided by Apple to convert to version numbers
+        if ($ua =~ m{ safari/ ( \d+ (?: \.\d+ )* ) }x) {
+            my $build = $1;
+            my $version = $safari_build_to_version{$build};
+            unless ($version) {
+                # if exact build -> version mapping doesn't exist, find next lower build
+                for my $maybe_build (sort { $b <=> $a } keys %safari_build_to_version) {
+                    $version = $safari_build_to_version{$maybe_build}, last
+                        if $build >= $maybe_build;
+                }
+            }
+            my ($major, $minor) = split /\./, $version;
+            my $beta;
+            $minor =~ s/(\D.*)// and $beta = $1;
+            $minor = 0 + ('.' . $minor);
+            return ( $major, $minor, ($beta ? 1 : undef) );
+        }
     }
 
-    return ( $self->major, $self>minor );
-
+    return ( $self->major, $self->minor, $self->beta($check) );
 }
 
 
@@ -839,12 +878,12 @@ sub engine_string {
 
     my ( $self, $check ) = _self_or_default( @_ );
 
-    if ( $self->gecko ) {
-        return 'Gecko';
+    if ( $self->user_agent =~ m{\bKHTML\b} ) {
+        return 'KHTML';
     }
 
-    if ( $self->user_agent =~ m{KHTML, like Gecko} ) {
-        return 'KHTML';
+    if ( $self->gecko ) {
+        return 'Gecko';
     }
 
     if ( $self->ie ) {
@@ -1027,7 +1066,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.15
+version 1.16
 
 =head1 SYNOPSIS
 
@@ -1258,7 +1297,7 @@ distinguish between Win95 and WinNT.
 Returns one of the following strings, or undef. This method exists solely for
 compatibility with the L<HTTP::Headers::UserAgent> module.
 
-  Win95, Win98, WinNT, Win2K, WinXP, Win2K3, WinVista, Win7, Mac, Mac OS X,
+  Win95, Win98, WinNT, Win2K, WinXP, Win2k3, WinVista, Win7, Mac, Mac OS X,
   Win3x, OS2, Unix, Linux, Playstation 3 GameOS, Playstation Portable GameOS
 
 =head1 Detecting Browser Vendor
@@ -1311,23 +1350,21 @@ version separately.
 
 =head3 netfront
 
-Netscape 6, even though its called six, in the userAgent string has version
-number 5. The nav6 and nav6up methods correctly handle this quirk. The firefox
-text correctly detects the older-named versions of the browser (Phoenix,
-Firebird)
+Netscape 6, even though its called six, in the User-Agent string has version
+number 5. The nav6 and nav6up methods correctly handle this quirk. The Firefox
+test correctly detects the older-named versions of the browser (Phoenix,
+Firebird).
 
 =head2 browser_string()
 
 Returns undef on failure.  Otherwise returns one of the following:
 
-Firefox, Safari, Chrome, MSIE, etc
-
-To see a complete list of possible browser strings, check the browser_string()
-method in the source code.
+Netscape, Firefox, Safari, Chrome, MSIE, WebTV, AOL Browser, Opera, Mosaic,
+Lynx, RealPlayer, IceWeasel, curl, puf, NetFront
 
 =head2 gecko_version()
 
-If a Gecko rendering engine is used (as in Mozilla or Firebird), returns the
+If a Gecko rendering engine is used (as in Mozilla or Firefox), returns the
 version of the renderer (e.g. 1.3a, 1.7, 1.8) This might be more useful than
 the particular browser name or version when correcting for quirks in different
 versions of this rendering engine. If no Gecko browser is being used, or the
@@ -1451,6 +1488,10 @@ Luke Saunders
 
 Jacob Rask
 
+Heiko Weber
+
+Jon Jensen
+
 =head1 TO DO
 
 The _engine() method currently only handles Gecko.  It needs to be expanded to
@@ -1458,16 +1499,15 @@ handle other rendering engines.
 
 POD coverage is also not 100%.
 
-If you're able to help out with anything on the TO DO list, please do. A great
-deal of the latest improvements have come from patches via RT and GitHub pull
-requests. If you're able to submit changes via GitHub, I'm generally able to
-get them into a new release fairly quickly.
-
 =head1 SEE ALSO
 
-"The Ultimate JavaScript Client Sniffer, Version 3.0", B<http://www.mozilla.org/docs/web-developer/sniffer/browser_type.html>.
+"The Ultimate JavaScript Client Sniffer, Version 3.0", B<http://www.mozilla.org/docs/web-developer/sniffer/browser_type.html>
 
-"Browser ID (User-Agent) Strings" B<http://www.zytrax.com/tech/web/browser_ids.htm>
+"Browser ID (User-Agent) Strings", B<http://www.zytrax.com/tech/web/browser_ids.htm>
+
+Safari "Historical User Agent strings", B<http://developer.apple.com/internet/safari/uamatrix.html> (now gone, retrieved 2007-06-20)
+
+"Safari Agent Strings", B<http://homepage.mac.com/jprince/designSandbox/web/safari-agents/>
 
 perl(1), L<HTTP::Headers>, L<HTTP::Headers::UserAgent>.
 
@@ -1508,10 +1548,16 @@ L<http://search.cpan.org/dist/HTTP-BrowserDetect/>
 The biggest limitation at this point is the test suite, which really needs to
 have many more UserAgent strings to test against.
 
+=head1 CONTRIBUTING
+
 Patches are certainly welcome, with many thanks for the excellent
 contributions which have already been received. The preferred method of
 patching would be to fork the GitHub repo and then send me a pull requests,
 but plain old patch files are also welcome.
+
+If you're able to add test cases, this will speed up the time to release your
+changes. Just edit t/useragents.yaml so that the test coverage includes any
+changes you have made.  Please contact me if you have any questions.
 
 =head1 AUTHOR
 
