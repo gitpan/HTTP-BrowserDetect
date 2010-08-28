@@ -3,7 +3,7 @@ NAME
     an HTTP user agent string
 
 VERSION
-    version 1.16
+    version 1.17
 
 SYNOPSIS
         use HTTP::BrowserDetect;
@@ -230,7 +230,7 @@ Detecting Browser Vendor
    aol aol3 aol4 aol5 aol6
    webtv
    opera opera3 opera4 opera5 opera6 opera7
-   lynx links
+   lynx links elinks
    emacs
    staroffice
    lotusnotes
@@ -240,6 +240,7 @@ Detecting Browser Vendor
    curl
    realplayer
    netfront
+   mobile_safari
     Netscape 6, even though its called six, in the User-Agent string has
     version number 5. The nav6 and nav6up methods correctly handle this
     quirk. The Firefox test correctly detects the older-named versions of
@@ -249,7 +250,8 @@ Detecting Browser Vendor
     Returns undef on failure. Otherwise returns one of the following:
 
     Netscape, Firefox, Safari, Chrome, MSIE, WebTV, AOL Browser, Opera,
-    Mosaic, Lynx, RealPlayer, IceWeasel, curl, puf, NetFront
+    Mosaic, Lynx, Links, ELinks, RealPlayer, IceWeasel, curl, puf, NetFront,
+    Mobile Safari
 
   gecko_version()
     If a Gecko rendering engine is used (as in Mozilla or Firefox), returns

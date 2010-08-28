@@ -1,7 +1,7 @@
 use strict;
 package HTTP::BrowserDetect;
 BEGIN {
-  $HTTP::BrowserDetect::VERSION = '1.16';
+  $HTTP::BrowserDetect::VERSION = '1.17';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -57,7 +57,8 @@ push @ALL_TESTS, qw(
     aol5        aol6        neoplanet
     neoplanet2  avantgo     emacs
     mozilla     gecko       r1
-    iceweasel   netfront
+    iceweasel   netfront    mobile_safari
+    elinks
 );
 
 # Robots
@@ -242,6 +243,7 @@ sub _test {
         = (    ( index( $ua, "safari" ) != -1 )
             || ( index( $ua, "applewebkit" ) != -1 ) )
         && ( index( $ua, "chrome" ) == -1 );
+    $tests->{MOBILE_SAFARI} = ($tests->{SAFARI} && index($ua, " mobile safari/") >= 0);
 
     # Chrome Version
     if ( $tests->{CHROME} ) {
@@ -381,6 +383,7 @@ sub _test {
     $tests->{KONQUEROR}  = ( index( $ua, "konqueror" ) != -1 );
     $tests->{LYNX}       = ( index( $ua, "lynx" ) != -1 );
     $tests->{LINKS}      = ( index( $ua, "links" ) != -1 );
+    $tests->{ELINKS}     = ( index( $ua, "elinks" ) != -1 );
     $tests->{WEBTV}      = ( index( $ua, "webtv" ) != -1 );
     $tests->{MOSAIC}     = ( index( $ua, "mosaic" ) != -1 );
     $tests->{PUF}        = ( index( $ua, "puf" ) != -1 );
@@ -700,11 +703,14 @@ sub browser_string {
         $browser_string = 'Opera'       if $self->opera;
         $browser_string = 'Mosaic'      if $self->mosaic;
         $browser_string = 'Lynx'        if $self->lynx;
+        $browser_string = 'Links'       if $self->links;
         $browser_string = 'RealPlayer'  if $self->realplayer;
         $browser_string = 'IceWeasel'   if $self->iceweasel;
         $browser_string = 'curl'        if $self->curl;
         $browser_string = 'puf'         if $self->puf;
         $browser_string = 'NetFront'    if $self->netfront;
+        $browser_string = 'Mobile Safari' if $self->mobile_safari;
+        $browser_string = 'ELinks'      if $self->elinks;
     }
     return $browser_string;
 }
@@ -1066,7 +1072,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.16
+version 1.17
 
 =head1 SYNOPSIS
 
@@ -1330,7 +1336,7 @@ version separately.
 
 =head3 opera opera3 opera4 opera5 opera6 opera7
 
-=head3 lynx links
+=head3 lynx links elinks
 
 =head3 emacs
 
@@ -1350,6 +1356,8 @@ version separately.
 
 =head3 netfront
 
+=head3 mobile_safari
+
 Netscape 6, even though its called six, in the User-Agent string has version
 number 5. The nav6 and nav6up methods correctly handle this quirk. The Firefox
 test correctly detects the older-named versions of the browser (Phoenix,
@@ -1360,7 +1368,7 @@ Firebird).
 Returns undef on failure.  Otherwise returns one of the following:
 
 Netscape, Firefox, Safari, Chrome, MSIE, WebTV, AOL Browser, Opera, Mosaic,
-Lynx, RealPlayer, IceWeasel, curl, puf, NetFront
+Lynx, Links, ELinks, RealPlayer, IceWeasel, curl, puf, NetFront, Mobile Safari
 
 =head2 gecko_version()
 
