@@ -1,7 +1,7 @@
 use strict;
 package HTTP::BrowserDetect;
 BEGIN {
-  $HTTP::BrowserDetect::VERSION = '1.17';
+  $HTTP::BrowserDetect::VERSION = '1.18';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -37,7 +37,7 @@ push @ALL_TESTS, qw(
     palm    audrey      iopener
     wap     blackberry  iphone
     ipod    ipad        ps3
-    psp
+    psp     kindle
 );
 
 # Browsers
@@ -226,6 +226,10 @@ sub _test {
     # Opera/9.80 (S60; SymbOS; Opera Mobi/320; U; sv) Presto/2.4.15 Version/10.00
 
     if ( $ua =~ m{\AOpera.*\sVersion/(\d*)\.(\d*)\z}i) {
+        $major = $1;
+        $minor = $2;
+    }
+    elsif ( $ua =~ m{NetFront/(\d*)\.(\d*) Kindle}i ) {
         $major = $1;
         $minor = $2;
     }
@@ -440,6 +444,7 @@ sub _test {
     $tests->{NETFRONT} = (
            index( $ua, "playstation 3" ) != -1
         || index( $ua, "playstation portable" ) != -1
+        || index( $ua, "netfront" ) != -1
     );
 
     # Devices
@@ -448,6 +453,7 @@ sub _test {
     $tests->{IPHONE}     = ( index( $ua, "iphone" ) != -1 );
     $tests->{IPOD}       = ( index( $ua, "ipod" ) != -1 );
     $tests->{IPAD}       = ( index( $ua, "ipad" ) != -1 );
+    $tests->{KINDLE}     = ( index( $ua, "kindle" ) != -1 );
     $tests->{AUDREY}     = ( index( $ua, "audrey" ) != -1 );
     $tests->{IOPENER}    = ( index( $ua, "i-opener" ) != -1 );
     $tests->{AVANTGO}    = ( index( $ua, "avantgo" ) != -1 );
@@ -1072,7 +1078,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.17
+version 1.18
 
 =head1 SYNOPSIS
 
@@ -1397,6 +1403,8 @@ The following methods are available, each returning a true or false value.
 =head3 ipod
 
 =head3 ipad
+
+=head3 kindle
 
 =head3 palm
 

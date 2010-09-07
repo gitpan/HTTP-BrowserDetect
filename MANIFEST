@@ -11,6 +11,7 @@ dist.ini
 lib/HTTP/BrowserDetect.pm
 t/01-detect.t
 t/author-critic.t
+t/create_config.pl
 t/release-pod-coverage.t
 t/release-pod-syntax.t
 t/useragents.yaml

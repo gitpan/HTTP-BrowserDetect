@@ -3,7 +3,7 @@ NAME
     an HTTP user agent string
 
 VERSION
-    version 1.17
+    version 1.18
 
 SYNOPSIS
         use HTTP::BrowserDetect;
@@ -273,6 +273,7 @@ Detecting Other Devices
    iphone
    ipod
    ipad
+   kindle
    palm
    wap
    psp
