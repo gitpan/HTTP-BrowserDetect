@@ -3,7 +3,7 @@ NAME
     an HTTP user agent string
 
 VERSION
-    version 1.18
+    version 1.19
 
 SYNOPSIS
         use HTTP::BrowserDetect;
@@ -85,8 +85,8 @@ SUBROUTINES/METHODS
 
   device()
     Returns the method name of the actual hardware, if it can be detected.
-    Currently returns one of: blackberry, iphone, ipod or ipad Returns UNDEF
-    if no hardware can be detected
+    Currently returns one of: blackberry, webos, iphone, ipod or ipad
+    Returns UNDEF if no hardware can be detected
 
   device_name()
     Returns a human formatted version of the hardware device name. These
@@ -275,6 +275,7 @@ Detecting Other Devices
    ipad
    kindle
    palm
+   webos
    wap
    psp
    ps3
@@ -419,8 +420,12 @@ CONTRIBUTING
     includes any changes you have made. Please contact me if you have any
     questions.
 
-AUTHOR
-    Olaf Alders <olaf@wundercounter.com> (current maintainer)
+AUTHORS
+    *   Lee Semel <lee@semel.net>
+
+    *   Peter Walsham
+
+    *   Olaf Alders <olaf@wundercounter.com> (current maintainer)
 
 COPYRIGHT AND LICENSE
     This software is copyright (c) 2010 by Lee Semel.

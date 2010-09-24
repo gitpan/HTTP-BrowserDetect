@@ -20,10 +20,12 @@ my %module_build_args = (
   },
   'dist_abstract' => 'Determine Web browser, version, and platform from an HTTP user agent string',
   'dist_author' => [
+    'Lee Semel <lee@semel.net>',
+    'Peter Walsham',
     'Olaf Alders <olaf@wundercounter.com> (current maintainer)'
   ],
   'dist_name' => 'HTTP-BrowserDetect',
-  'dist_version' => '1.18',
+  'dist_version' => '1.19',
   'license' => 'perl',
   'module_name' => 'HTTP::BrowserDetect',
   'recommends' => {},

@@ -10,7 +10,7 @@ use ExtUtils::MakeMaker 6.31;
 
 my %WriteMakefileArgs = (
   'ABSTRACT' => 'Determine Web browser, version, and platform from an HTTP user agent string',
-  'AUTHOR' => 'Olaf Alders <olaf@wundercounter.com> (current maintainer)',
+  'AUTHOR' => 'Lee Semel <lee@semel.net>, Peter Walsham, Olaf Alders <olaf@wundercounter.com> (current maintainer)',
   'BUILD_REQUIRES' => {
     'Data::Dump' => '0',
     'English' => '0',
@@ -31,7 +31,7 @@ my %WriteMakefileArgs = (
     'Exporter' => '0',
     'vars' => '0'
   },
-  'VERSION' => '1.18',
+  'VERSION' => '1.19',
   'test' => {
     'TESTS' => 't/*.t'
   }
