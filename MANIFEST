@@ -8,6 +8,7 @@ Makefile.PL
 README
 TODO
 dist.ini
+http-browserdetect.komodoproject
 lib/HTTP/BrowserDetect.pm
 t/01-detect.t
 t/author-critic.t

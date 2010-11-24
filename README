@@ -3,7 +3,7 @@ NAME
     an HTTP user agent string
 
 VERSION
-    version 1.19
+    version 1.20
 
 SYNOPSIS
         use HTTP::BrowserDetect;
@@ -304,6 +304,7 @@ Detecting Other Devices
    googlemobile
    msn (same as bing)
    puf
+   facebook
 CREDITS
     Lee Semel, lee@semel.net (Original Author)
 
@@ -355,6 +356,12 @@ ACKNOWLEDGEMENTS
     Heiko Weber
 
     Jon Jensen
+
+    Jesse Thompson
+
+    Graham Barr
+
+    Enrico Sorcinelli
 
 TO DO
     The _engine() method currently only handles Gecko. It needs to be

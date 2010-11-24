@@ -1,7 +1,7 @@
 use strict;
 package HTTP::BrowserDetect;
 BEGIN {
-  $HTTP::BrowserDetect::VERSION = '1.19';
+  $HTTP::BrowserDetect::VERSION = '1.20';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -70,7 +70,7 @@ push @ALL_TESTS, qw(
     slurp       webtv       staroffice
     lotusnotes  konqueror   icab
     google      java        googlemobile
-    msn         msnmobile
+    msn         msnmobile   facebook
 );
 
 # Properties
@@ -409,6 +409,7 @@ sub _test {
     $tests->{WEBCRAWLER}   = ( index( $ua, "webcrawler" ) != -1 );
     $tests->{LINKEXCHANGE} = ( index( $ua, "lecodechecker" ) != -1 );
     $tests->{SLURP}        = ( index( $ua, "slurp" ) != -1 );
+    $tests->{FACEBOOK}     = ( index( $ua, "facebookexternalhit" ) != -1 );
     $tests->{ROBOT}        = (
         (          $tests->{WGET}
                 || $tests->{PUF}
@@ -425,13 +426,14 @@ sub _test {
                 || $tests->{GOOGLEMOBILE}
                 || $tests->{MSN}
                 || $tests->{MSNMOBILE}
+                || $tests->{FACEBOOK}
         )
             || index( $ua, "bot" ) != -1
             || index( $ua, "spider" ) != -1
             || index( $ua, "crawl" ) != -1
             || index( $ua, "agent" ) != -1
-            || index( $ua, "seek" ) != -1
-            || index( $ua, "search" ) != -1
+            || $ua =~ /seek (?! mo (?: toolbar )? \s+ \d+\.\d+ )/x
+            || $ua =~ /search (?! [\w\s]* toolbar \b | bar \b )/x
             || index( $ua, "reap" ) != -1
             || index( $ua, "worm" ) != -1
             || index( $ua, "find" ) != -1
@@ -1080,7 +1082,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.19
+version 1.20
 
 =head1 SYNOPSIS
 
@@ -1458,6 +1460,8 @@ value. This is by no means a complete list of robots that exist on the Web.
 
 =head3 puf
 
+=head3 facebook
+
 =head1 CREDITS
 
 Lee Semel, lee@semel.net (Original Author)
@@ -1511,6 +1515,12 @@ Jacob Rask
 Heiko Weber
 
 Jon Jensen
+
+Jesse Thompson
+
+Graham Barr
+
+Enrico Sorcinelli
 
 =head1 TO DO
 
