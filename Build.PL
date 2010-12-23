@@ -12,7 +12,7 @@ my %module_build_args = (
     'FindBin' => '0',
     'Module::Build' => '0.3601',
     'Test::More' => '0',
-    'YAML::Tiny' => '0'
+    'YAML' => '0'
   },
   'configure_requires' => {
     'ExtUtils::MakeMaker' => '6.31',
@@ -25,7 +25,7 @@ my %module_build_args = (
     'Olaf Alders <olaf@wundercounter.com> (current maintainer)'
   ],
   'dist_name' => 'HTTP-BrowserDetect',
-  'dist_version' => '1.20',
+  'dist_version' => '1.21',
   'license' => 'perl',
   'module_name' => 'HTTP::BrowserDetect',
   'recommends' => {},
