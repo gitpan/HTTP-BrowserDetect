@@ -1,7 +1,7 @@
 use strict;
 package HTTP::BrowserDetect;
 BEGIN {
-  $HTTP::BrowserDetect::VERSION = '1.21';
+  $HTTP::BrowserDetect::VERSION = '1.22';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -163,7 +163,7 @@ sub _test {
     $self->{tests} = {};
     my $tests = $self->{tests};
 
-    my @ff = qw( firefox firebird iceweasel phoenix );
+    my @ff = qw( firefox firebird iceweasel phoenix namoroka );
     my $ff = join "|", @ff;
 
     my $ua = lc $self->{user_agent};
@@ -1082,7 +1082,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.21
+version 1.22
 
 =head1 SYNOPSIS
 
@@ -1609,7 +1609,7 @@ Olaf Alders <olaf@wundercounter.com> (current maintainer)
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Lee Semel.
+This software is copyright (c) 2011 by Lee Semel.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
