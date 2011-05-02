@@ -9,13 +9,17 @@ my %module_build_args = (
   'build_requires' => {
     'Data::Dump' => '0',
     'English' => '0',
+    'File::Slurp' => '0',
     'FindBin' => '0',
+    'JSON::PP' => '0',
+    'Modern::Perl' => '0',
     'Module::Build' => '0.3601',
     'Test::More' => '0',
-    'YAML' => '0'
+    'YAML' => '0',
+    'YAML::Syck' => '0'
   },
   'configure_requires' => {
-    'ExtUtils::MakeMaker' => '6.31',
+    'ExtUtils::MakeMaker' => '6.30',
     'Module::Build' => '0.3601'
   },
   'dist_abstract' => 'Determine Web browser, version, and platform from an HTTP user agent string',
@@ -25,7 +29,7 @@ my %module_build_args = (
     'Olaf Alders <olaf@wundercounter.com> (current maintainer)'
   ],
   'dist_name' => 'HTTP-BrowserDetect',
-  'dist_version' => '1.22',
+  'dist_version' => '1.23',
   'license' => 'perl',
   'module_name' => 'HTTP::BrowserDetect',
   'recommends' => {},

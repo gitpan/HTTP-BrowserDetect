@@ -3,7 +3,7 @@ Changes
 INSTALL
 LICENSE
 MANIFEST
-META.yml
+META.json
 Makefile.PL
 README
 TODO
@@ -13,4 +13,5 @@ lib/HTTP/BrowserDetect.pm
 t/01-detect.t
 t/author-critic.t
 t/release-pod-coverage.t
-t/useragents.yaml
+t/useragents.json
+t/yaml2json.pl

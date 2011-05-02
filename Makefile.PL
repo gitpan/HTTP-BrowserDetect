@@ -4,7 +4,7 @@ use warnings;
 
 
 
-use ExtUtils::MakeMaker 6.31;
+use ExtUtils::MakeMaker 6.30;
 
 
 
@@ -14,13 +14,17 @@ my %WriteMakefileArgs = (
   'BUILD_REQUIRES' => {
     'Data::Dump' => '0',
     'English' => '0',
+    'File::Slurp' => '0',
     'FindBin' => '0',
+    'JSON::PP' => '0',
+    'Modern::Perl' => '0',
     'Module::Build' => '0.3601',
     'Test::More' => '0',
-    'YAML' => '0'
+    'YAML' => '0',
+    'YAML::Syck' => '0'
   },
   'CONFIGURE_REQUIRES' => {
-    'ExtUtils::MakeMaker' => '6.31',
+    'ExtUtils::MakeMaker' => '6.30',
     'Module::Build' => '0.3601'
   },
   'DISTNAME' => 'HTTP-BrowserDetect',
@@ -31,7 +35,7 @@ my %WriteMakefileArgs = (
     'Exporter' => '0',
     'vars' => '0'
   },
-  'VERSION' => '1.22',
+  'VERSION' => '1.23',
   'test' => {
     'TESTS' => 't/*.t'
   }
