@@ -40,10 +40,7 @@
             "File::Slurp" : 0,
             "FindBin" : 0,
             "JSON::PP" : 0,
-            "Modern::Perl" : 0,
-            "Test::More" : 0,
-            "YAML" : 0,
-            "YAML::Syck" : 0
+            "Test::More" : 0
          }
       }
    },
@@ -52,13 +49,13 @@
       "bugtracker" : {
          "web" : "http://github.com/oalders/HTTP-BrowserDetect/issues"
       },
-      "homepage" : "http://github.com/oalders/http-browserdetect/tree",
+      "homepage" : "http://github.com/oalders/http-browserdetect",
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/oalders/http-browserdetect.git",
-         "web" : "http://github.com/oalders/http-browserdetect/tree"
+         "url" : "http://github.com/oalders/http-browserdetect",
+         "web" : "http://github.com/oalders/http-browserdetect"
       }
    },
-   "version" : "1.23"
+   "version" : "1.24"
 }
 

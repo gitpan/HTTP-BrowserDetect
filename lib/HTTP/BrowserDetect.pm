@@ -1,7 +1,7 @@
 use strict;
 package HTTP::BrowserDetect;
 BEGIN {
-  $HTTP::BrowserDetect::VERSION = '1.23';
+  $HTTP::BrowserDetect::VERSION = '1.24';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -196,7 +196,7 @@ sub _test {
                 ( [^.]* )           # Major version number is everything before first dot
                 \.                  # The first dot
                 ( [\d]* )           # Minor version nnumber is digits after first dot
-            }x
+            }xo
         )
     {
         $major = $2;
@@ -1109,7 +1109,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.23
+version 1.24
 
 =head1 SYNOPSIS
 
@@ -1558,6 +1558,8 @@ Enrico Sorcinelli
 
 Olivier Bilodeau
 
+Yoshiki Kurihara
+
 =head1 TO DO
 
 The _engine() method currently only handles Gecko.  It needs to be expanded to
@@ -1622,7 +1624,7 @@ patching would be to fork the GitHub repo and then send me a pull requests,
 but plain old patch files are also welcome.
 
 If you're able to add test cases, this will speed up the time to release your
-changes. Just edit t/useragents.yaml so that the test coverage includes any
+changes. Just edit t/useragents.json so that the test coverage includes any
 changes you have made.  Please contact me if you have any questions.
 
 =head1 AUTHORS

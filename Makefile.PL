@@ -17,11 +17,8 @@ my %WriteMakefileArgs = (
     'File::Slurp' => '0',
     'FindBin' => '0',
     'JSON::PP' => '0',
-    'Modern::Perl' => '0',
     'Module::Build' => '0.3601',
-    'Test::More' => '0',
-    'YAML' => '0',
-    'YAML::Syck' => '0'
+    'Test::More' => '0'
   },
   'CONFIGURE_REQUIRES' => {
     'ExtUtils::MakeMaker' => '6.30',
@@ -35,7 +32,7 @@ my %WriteMakefileArgs = (
     'Exporter' => '0',
     'vars' => '0'
   },
-  'VERSION' => '1.23',
+  'VERSION' => '1.24',
   'test' => {
     'TESTS' => 't/*.t'
   }

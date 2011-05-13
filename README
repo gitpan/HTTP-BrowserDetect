@@ -3,7 +3,7 @@ NAME
     an HTTP user agent string
 
 VERSION
-    version 1.23
+    version 1.24
 
 SYNOPSIS
         use HTTP::BrowserDetect;
@@ -371,6 +371,8 @@ ACKNOWLEDGEMENTS
 
     Olivier Bilodeau
 
+    Yoshiki Kurihara
+
 TO DO
     The _engine() method currently only handles Gecko. It needs to be
     expanded to handle other rendering engines.
@@ -431,7 +433,7 @@ CONTRIBUTING
     requests, but plain old patch files are also welcome.
 
     If you're able to add test cases, this will speed up the time to release
-    your changes. Just edit t/useragents.yaml so that the test coverage
+    your changes. Just edit t/useragents.json so that the test coverage
     includes any changes you have made. Please contact me if you have any
     questions.
 
