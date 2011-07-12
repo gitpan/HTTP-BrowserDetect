@@ -1,7 +1,7 @@
 use strict;
 package HTTP::BrowserDetect;
 BEGIN {
-  $HTTP::BrowserDetect::VERSION = '1.25';
+  $HTTP::BrowserDetect::VERSION = '1.26';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -1109,7 +1109,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.25
+version 1.26
 
 =head1 SYNOPSIS
 
@@ -1611,7 +1611,7 @@ L<http://cpanratings.perl.org/d/HTTP-BrowserDetect>
 
 =item * Search CPAN
 
-Lhttp://beta.metacpan.org/module/HTTP::BrowserDetect>
+L<http://beta.metacpan.org/module/HTTP::BrowserDetect>
 
 =back
 

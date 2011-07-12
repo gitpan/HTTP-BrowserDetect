@@ -3,7 +3,7 @@ NAME
     an HTTP user agent string
 
 VERSION
-    version 1.25
+    version 1.26
 
 SYNOPSIS
         use HTTP::BrowserDetect;
@@ -423,7 +423,7 @@ SUPPORT
 
     *   Search CPAN
 
-        Lhttp://beta.metacpan.org/module/HTTP::BrowserDetect>
+        <http://beta.metacpan.org/module/HTTP::BrowserDetect>
 
 BUGS AND LIMITATIONS
     The biggest limitation at this point is the test suite, which really
