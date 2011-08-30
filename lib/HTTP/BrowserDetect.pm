@@ -1,7 +1,7 @@
 use strict;
 package HTTP::BrowserDetect;
 BEGIN {
-  $HTTP::BrowserDetect::VERSION = '1.26';
+  $HTTP::BrowserDetect::VERSION = '1.27';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -527,6 +527,8 @@ sub _test {
             || index( $ua, "fennec" ) != -1
             || index( $ua, "opera tablet" ) != -1
             || $tests->{PSP}
+            || $tests->{GOOGLEMOBILE}
+            || $tests->{MSNMOBILE}
     );
 
     # Operating System
@@ -1109,7 +1111,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.26
+version 1.27
 
 =head1 SYNOPSIS
 
@@ -1561,6 +1563,8 @@ Olivier Bilodeau
 Yoshiki Kurihara
 
 Paul Findlay
+
+Uwe Voelker
 
 =head1 TO DO
 
