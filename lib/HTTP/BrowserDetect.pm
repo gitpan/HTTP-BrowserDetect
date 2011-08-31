@@ -1,7 +1,7 @@
 use strict;
 package HTTP::BrowserDetect;
 BEGIN {
-  $HTTP::BrowserDetect::VERSION = '1.27';
+  $HTTP::BrowserDetect::VERSION = '1.28';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -51,14 +51,15 @@ push @ALL_TESTS, qw(
     ie3         ie4         ie4up
     ie5         ie5up       ie55
     ie55up      ie6         ie7
-    ie8         opera       opera3
-    opera4      opera5      opera6
-    opera7      lynx        links
-    aol         aol3        aol4
-    aol5        aol6        neoplanet
-    neoplanet2  avantgo     emacs
-    mozilla     gecko       r1
-    elinks      netfront    mobile_safari
+    ie8         ie9         ie10
+    opera       opera3      opera4
+    opera5      opera6      opera7
+    lynx        links       aol
+    aol3        aol4        aol5
+    aol6        neoplanet   neoplanet2
+    avantgo     emacs       mozilla
+    gecko       r1          elinks
+    netfront    mobile_safari
 );
 
 # Firefox variants
@@ -352,6 +353,8 @@ sub _test {
     $tests->{IE6} = ( $tests->{IE} && $major == 6 );
     $tests->{IE7} = ( $tests->{IE} && $major == 7 );
     $tests->{IE8} = ( $tests->{IE} && $major == 8 );
+    $tests->{IE9} = ( $tests->{IE} && $major == 9 );
+    $tests->{IE10} = ( $tests->{IE} && $major == 10 );
 
     # Neoplanet browsers
 
@@ -1111,7 +1114,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.27
+version 1.28
 
 =head1 SYNOPSIS
 
@@ -1372,7 +1375,7 @@ version separately.
 
 =head3 icab
 
-=head3 ie ie3 ie4 ie4up ie5 ie55 ie6 ie7 ie8
+=head3 ie ie3 ie4 ie4up ie5 ie55 ie6 ie7 ie8 ie9 ie10
 
 =head3 java
 
@@ -1565,6 +1568,8 @@ Yoshiki Kurihara
 Paul Findlay
 
 Uwe Voelker
+
+Douglas Christopher Wilson
 
 =head1 TO DO
 
