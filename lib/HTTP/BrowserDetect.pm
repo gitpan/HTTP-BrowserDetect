@@ -1,7 +1,7 @@
 use strict;
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.31';
+  $HTTP::BrowserDetect::VERSION = '1.32';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -700,7 +700,7 @@ sub _test {
 
     # RealPlayer
     $tests->{REALPLAYER}
-        = ( index( $ua, "r1" ) != -1 || index( $ua, "realplayer" ) != -1 );
+        = ( index( $ua, "(r1 " ) != -1 || index( $ua, "realplayer" ) != -1 );
 
     $self->{realplayer_version} = undef;
     if ( $tests->{REALPLAYER} ) {
@@ -1074,6 +1074,10 @@ sub _language_country {
         }
     }
 
+    if ( $self->aol && $self->user_agent =~ m/;([A-Z]{2})_([A-Z]{2})\)/ ) {
+        return { language => $1, country => $2 };
+    }
+
     if ( $self->user_agent =~ m/\b([a-z]{2})-([A-Za-z]{2})\b/xms ) {
         return { language => uc $1, country => uc $2 };
     }
@@ -1130,7 +1134,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.31
+version 1.32
 
 =head1 SYNOPSIS
 
@@ -1589,6 +1593,8 @@ Paul Findlay
 Uwe Voelker
 
 Douglas Christopher Wilson
+
+John Oatis
 
 =head1 TO DO
 
