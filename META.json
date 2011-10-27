@@ -6,7 +6,7 @@
       "Olaf Alders <olaf@wundercounter.com> (current maintainer)"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300000, CPAN::Meta::Converter version 2.110930",
+   "generated_by" : "Dist::Zilla version 4.300002, CPAN::Meta::Converter version 2.110930",
    "license" : [
       "perl_5"
    ],
@@ -54,10 +54,10 @@
       "homepage" : "https://metacpan.org/release/HTTP-BrowserDetect",
       "repository" : {
          "type" : "git",
-         "url" : "http://github.com/oalders/http-browserdetect",
-         "web" : "http://github.com/oalders/http-browserdetect"
+         "url" : "https://github.com/oalders/http-browserdetect.git",
+         "web" : "https://github.com/oalders/http-browserdetect"
       }
    },
-   "version" : "1.33"
+   "version" : "1.34"
 }
 
