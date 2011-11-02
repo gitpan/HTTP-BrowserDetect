@@ -1,7 +1,7 @@
 use strict;
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.34';
+  $HTTP::BrowserDetect::VERSION = '1.35';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -405,7 +405,7 @@ sub _test {
     $tests->{ELINKS}     = ( index( $ua, "elinks" ) != -1 );
     $tests->{WEBTV}      = ( index( $ua, "webtv" ) != -1 );
     $tests->{MOSAIC}     = ( index( $ua, "mosaic" ) != -1 );
-    $tests->{PUF}        = ( index( $ua, "puf" ) != -1 );
+    $tests->{PUF}        = ( index( $ua, "puf/" ) != -1 );
     $tests->{WGET}       = ( index( $ua, "wget" ) != -1 );
     $tests->{GETRIGHT}   = ( index( $ua, "getright" ) != -1 );
     $tests->{LWP}
@@ -1150,7 +1150,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.34
+version 1.35
 
 =head1 SYNOPSIS
 
@@ -1615,6 +1615,8 @@ Uwe Voelker
 Douglas Christopher Wilson
 
 John Oatis
+
+Atsushi Kato
 
 =head1 TO DO
 
