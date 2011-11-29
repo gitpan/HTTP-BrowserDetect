@@ -1,7 +1,7 @@
 use strict;
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.36';
+  $HTTP::BrowserDetect::VERSION = '1.37';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -36,12 +36,15 @@ my @os = qw(
 push @ALL_TESTS, @os;
 
 # Devices
-push @ALL_TESTS, qw(
+my @devices = qw(
     palm    audrey      iopener
     wap     blackberry  iphone
     ipod    ipad        ps3
     psp     kindle      webos
+    dsi     n3ds
 );
+
+push @ALL_TESTS, @devices;
 
 # Browsers
 push @ALL_TESTS, qw(
@@ -71,7 +74,7 @@ push @ALL_TESTS, qw(
 
 # Firefox variants
 push @ALL_TESTS, qw(
-    firebird    iceweasel   phoenix 
+    firebird    iceweasel   phoenix
     namoroka
 );
 
@@ -247,6 +250,10 @@ sub _test {
         $major = $1;
         $minor = $2;
     }
+    elsif ( $ua =~ m{Nintendo 3DS;.*\sVersion/(\d*)\.(\d*)}i ) {
+        $major = $1;
+        $minor = $2;
+    }
 
     $major = 0 if !$major;
     $minor = $self->_format_minor( $minor );
@@ -309,6 +316,7 @@ sub _test {
             && index( $ua, "opera" ) == -1
             && index( $ua, "webtv" ) == -1
             && index( $ua, "hotjava" ) == -1
+            && index( $ua, "nintendo" ) == -1
             && index( $ua, "playstation 3" ) == -1
             && index( $ua, "playstation portable" ) == -1 );
 
@@ -385,7 +393,7 @@ sub _test {
     $tests->{OPERA3} = ( index( $ua, "opera 3" ) != -1 )
         || ( index( $ua, "opera/3" ) != -1 );
     $tests->{OPERA4} = ( index( $ua, "opera 4" ) != -1 )
-        || ( index( $ua, "opera/4" ) != -1 );
+        || ( index( $ua, "opera/4" ) != -1 && ( index( $ua, "nintendo dsi" ) == -1 ) );
     $tests->{OPERA5} = ( index( $ua, "opera 5" ) != -1 )
         || ( index( $ua, "opera/5" ) != -1 );
     $tests->{OPERA6} = ( index( $ua, "opera 6" ) != -1 )
@@ -494,6 +502,8 @@ sub _test {
             || index( $ua, "zetor" ) != -1 );
     $tests->{PS3} = ( index( $ua, "playstation 3" ) != -1 );
     $tests->{PSP} = ( index( $ua, "playstation portable" ) != -1 );
+    $tests->{DSI}   = ( index( $ua, "nintendo dsi" ) != -1 );
+    $tests->{'N3DS'} = ( index( $ua, "nintendo 3ds" ) != -1 );
 
     $tests->{MOBILE} = (
                index( $ua, "up.browser" ) != -1
@@ -535,6 +545,8 @@ sub _test {
             || index( $ua, "fennec" ) != -1
             || index( $ua, "opera tablet" ) != -1
             || $tests->{PSP}
+            || $tests->{DSI}
+            || $tests->{'N3DS'}
             || $tests->{GOOGLEMOBILE}
             || $tests->{MSNMOBILE}
     );
@@ -765,6 +777,8 @@ sub browser_string {
         $browser_string = 'Mobile Safari' if $self->mobile_safari;
         $browser_string = 'ELinks'      if $self->elinks;
         $browser_string = 'BlackBerry'  if $self->blackberry;
+        $browser_string = 'Nintendo 3DS' if $self->n3ds;
+        $browser_string = 'Nintendo DSi' if $self->dsi;
     }
     return $browser_string;
 }
@@ -1041,10 +1055,6 @@ sub device {
 
     my ( $self, $check ) = _self_or_default( @_ );
 
-    my @devices = qw(
-        blackberry  iphone  ipod    ipad  ps3  psp  webos
-    );
-
     foreach my $device ( @devices ) {
         return $device if ( $self->$device );
     }
@@ -1060,9 +1070,12 @@ sub device_name {
 
     my %device_name = (
         blackberry => 'BlackBerry',
+        dsi => 'Nintendo DSi',
         iphone => 'iPhone',
         ipod => 'iPod',
         ipad => 'iPad',
+        kindle => 'Kindle',
+        n3ds => 'Nintendo 3DS',
         psp  => 'Sony PlayStation Portable',
         ps3  => 'Sony PlayStation 3',
         webos => 'webOS',
@@ -1140,6 +1153,8 @@ sub browser_properties {
 }
 1;
 
+# ABSTRACT: Determine Web browser, version, and platform from an HTTP user agent string
+
 
 
 =pod
@@ -1150,7 +1165,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.36
+version 1.37
 
 =head1 SYNOPSIS
 
@@ -1188,18 +1203,6 @@ string. The results of these tests are available via methods of the object.
 This module is based upon the JavaScript browser detection code available at
 L<http://www.mozilla.org/docs/web-developer/sniffer/browser_type.html>.
 
-=head1 INSTALLATION
-
-In most cases, you can just issue the following commands:
-
-  perl Build.PL
-  ./Build
-  ./Build test
-  ./Build install
-
-Please see the documentation for L<Module::Build> if you have questions about
-installing to custom locations etc.
-
 =head1 CONSTRUCTOR AND STARTUP
 
 =head2 new()
@@ -1236,21 +1239,22 @@ be in the form of an upper case 2 character code. ie: EN, DE, etc
 =head2 device()
 
 Returns the method name of the actual hardware, if it can be detected.
-Currently returns one of: blackberry, webos, iphone, ipod or ipad  Returns UNDEF if
-no hardware can be detected
+Currently returns one of: blackberry, dsi, iphone, ipod, ipad, kindle, n3ds,
+psp, ps3, webos  Returns UNDEF if no hardware can be detected
 
 =head2 device_name()
 
 Returns a human formatted version of the hardware device name.  These names
 are subject to change and are really meant for display purposes.  You should
-use the device() method in your logic.  Returns one of: BlackBerry, iPhone,
-iPod or iPad or device name found in user agent string.  Returns C<undef> if
-no hardware can be detected.
+use the device() method in your logic.  Returns one of: BlackBerry, Nintendo
+DSi,iPhone, iPod, iPad, Kindle, Nintendo 3DS, Sony PlayStation Portable, Sony
+Playstation 3, webOS. Returns C<undef> if this is not a device or if no device
+name can be detected.
 
 =head2 browser_properties()
 
 Returns a list of the browser properties, that is, all of the tests that passed
-for the provided user_agent string. Operating systems, devices, browser names, 
+for the provided user_agent string. Operating systems, devices, browser names,
 mobile and robots are all browser properties.
 
 =head1 Detecting Browser Version
@@ -1482,6 +1486,8 @@ The following methods are available, each returning a true or false value.
 
 =head3 blackberry
 
+=head3 dsi
+
 =head3 iopener
 
 =head3 iphone
@@ -1491,6 +1497,8 @@ The following methods are available, each returning a true or false value.
 =head3 ipad
 
 =head3 kindle
+
+=head3 n3ds
 
 =head3 palm
 
@@ -1555,6 +1563,8 @@ Olaf Alders, C<olaf at wundercounter.com> (co-maintainer)
 =head1 ACKNOWLEDGEMENTS
 
 Thanks to the following for their contributions:
+
+cho45
 
 Leonardo Herrera
 
@@ -1720,6 +1730,4 @@ the same terms as the Perl 5 programming language system itself.
 
 
 __END__
-
-# ABSTRACT: Determine Web browser, version, and platform from an HTTP user agent string
 
