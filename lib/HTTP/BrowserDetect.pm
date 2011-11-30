@@ -1,7 +1,7 @@
 use strict;
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.37';
+  $HTTP::BrowserDetect::VERSION = '1.38';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -974,7 +974,7 @@ sub engine_string {
         return 'NetFront';
     }
 
-    return;
+    return undef;
 }
 
 sub _engine {
@@ -993,7 +993,7 @@ sub engine_version {
         return $self->engine_major + $self->engine_minor;
     }
 
-    return;
+    return undef;
 
 }
 
@@ -1006,7 +1006,7 @@ sub engine_major {
         return shift @version;
     }
 
-    return;
+    return undef;
 
 }
 
@@ -1020,7 +1020,7 @@ sub engine_minor {
         return $self->_format_minor( shift @version );
     }
 
-    return;
+    return undef;
 
 }
 
@@ -1059,7 +1059,7 @@ sub device {
         return $device if ( $self->$device );
     }
 
-    return;
+    return undef;
 }
 
 sub device_name {
@@ -1082,7 +1082,7 @@ sub device_name {
     );
 
     my $device = $self->device;
-    return if !$device;
+    return undef if !$device;
 
     return $device_name{ $self->device };
 }
@@ -1165,7 +1165,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.37
+version 1.38
 
 =head1 SYNOPSIS
 
@@ -1627,6 +1627,8 @@ Douglas Christopher Wilson
 John Oatis
 
 Atsushi Kato
+
+Ronald J. Kimball
 
 =head1 TO DO
 
