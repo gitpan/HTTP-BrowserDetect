@@ -1,7 +1,7 @@
 use strict;
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.39';
+  $HTTP::BrowserDetect::VERSION = '1.40';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -780,11 +780,14 @@ sub _test {
 
     $self->{realplayer_version} = undef;
     if ( $tests->{REALPLAYER} ) {
-        if ( $ua =~ /realplayer\/([\d\.]+)/ ) {
+        if ( $ua =~ /realplayer\/([\d+\.]+)/ ) {
             $self->{realplayer_version} = $1;
             my @version = split( /\./, $self->{realplayer_version} );
             $major = shift @version;
             $minor = shift @version;
+        }
+        elsif ( $ua =~ /realplayer\s(\w+)/ ){
+        	$self->{realplayer_version} = $1;
         }
     }
 
@@ -818,7 +821,7 @@ sub browser_string {
         $browser_string = 'Mosaic'      if $self->mosaic;
         $browser_string = 'Lynx'        if $self->lynx;
         $browser_string = 'Links'       if $self->links;
-        $browser_string = 'RealPlayer'  if $self->realplayer;
+        $browser_string = 'RealPlayer'  if $self->realplayer_browser;
         $browser_string = 'IceWeasel'   if $self->iceweasel;
         $browser_string = 'curl'        if $self->curl;
         $browser_string = 'puf'         if $self->puf;
@@ -877,6 +880,12 @@ sub _realplayer_version {
         return $self->{realplayer_version};
     }
 
+    return 0;
+}
+
+sub realplayer_browser {
+    my ( $self, $check ) = _self_or_default( @_ );
+    return 1 if $self->{realplayer_version};
     return 0;
 }
 
@@ -1201,7 +1210,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.39
+version 1.40
 
 =head1 SYNOPSIS
 
@@ -1486,6 +1495,12 @@ version separately.
 
 =head3 realplayer
 
+=head3 realplayer_browser
+The realplayer method above tests for the presence of either the RealPlayer
+plug-in "(r1 " or the browser "RealPlayer". To preserve 
+"bugwards compatibility" and prevent false reporting, browser_string calls
+this method which ignores the "(r1 " plug-in signature.   
+
 =head3 safari
 
 =head3 staroffice
@@ -1762,7 +1777,7 @@ Olaf Alders <olaf@wundercounter.com> (current maintainer)
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by Lee Semel.
+This software is copyright (c) 2012 by Lee Semel.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
