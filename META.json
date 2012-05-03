@@ -6,7 +6,7 @@
       "Olaf Alders <olaf@wundercounter.com> (current maintainer)"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300003, CPAN::Meta::Converter version 2.112621",
+   "generated_by" : "Dist::Zilla version 4.300010, CPAN::Meta::Converter version 2.120630",
    "license" : [
       "perl_5"
    ],
@@ -29,20 +29,20 @@
       },
       "runtime" : {
          "requires" : {
-            "Exporter" : 0,
-            "strict" : 0,
-            "vars" : 0
+            "Exporter" : "0",
+            "strict" : "0",
+            "vars" : "0"
          }
       },
       "test" : {
          "requires" : {
-            "Data::Dump" : 0,
-            "English" : 0,
-            "File::Slurp" : 0,
-            "FindBin" : 0,
-            "JSON::PP" : 0,
-            "Test::More" : 0,
-            "warnings" : 0
+            "Data::Dump" : "0",
+            "English" : "0",
+            "File::Slurp" : "0",
+            "FindBin" : "0",
+            "JSON::PP" : "0",
+            "Test::More" : "0",
+            "warnings" : "0"
          }
       }
    },
@@ -58,6 +58,6 @@
          "web" : "https://github.com/oalders/http-browserdetect"
       }
    },
-   "version" : "1.42"
+   "version" : "1.43"
 }
 
