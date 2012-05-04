@@ -2,7 +2,7 @@ use strict;
 
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.43';
+  $HTTP::BrowserDetect::VERSION = '1.44';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -139,7 +139,7 @@ push @ALL_TESTS,
     (
     @OS_TESTS,          @WINDOWS_TESTS, @MAC_TESTS,
     @UNIX_TESTS,        @BSD_TESTS,     @GAMING_TESTS,
-    sort ( keys %DEVICE_TESTS ), @BROWSER_TESTS, @IE_TESTS,
+    ( sort ( keys %DEVICE_TESTS ) ), @BROWSER_TESTS, @IE_TESTS,
     @OPERA_TESTS,       @AOL_TESTS,     @NETSCAPE_TESTS,
     @FIREFOX_TESTS,     @ENGINE_TESTS,  @ROBOT_TESTS,
     @MISC_TESTS,
@@ -1234,7 +1234,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.43
+version 1.44
 
 =head1 SYNOPSIS
 
