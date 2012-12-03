@@ -12,5 +12,4 @@ lib/HTTP/BrowserDetect.pm
 t/01-detect.t
 t/03-language.t
 t/author-critic.t
-t/release-pod-coverage.t
 t/useragents.json

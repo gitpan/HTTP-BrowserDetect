@@ -12,8 +12,6 @@ my %WriteMakefileArgs = (
   "ABSTRACT" => "Determine Web browser, version, and platform from an HTTP user agent string",
   "AUTHOR" => "Lee Semel <lee\@semel.net>, Peter Walsham, Olaf Alders <olaf\@wundercounter.com> (current maintainer)",
   "BUILD_REQUIRES" => {
-    "Data::Dump" => 0,
-    "English" => 0,
     "File::Slurp" => 0,
     "FindBin" => 0,
     "JSON::PP" => 0,
@@ -34,7 +32,7 @@ my %WriteMakefileArgs = (
     "strict" => 0,
     "vars" => 0
   },
-  "VERSION" => "1.44",
+  "VERSION" => "1.45",
   "test" => {
     "TESTS" => "t/*.t"
   }

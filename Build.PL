@@ -7,8 +7,6 @@ use Module::Build 0.3601;
 
 my %module_build_args = (
   "build_requires" => {
-    "Data::Dump" => 0,
-    "English" => 0,
     "File::Slurp" => 0,
     "FindBin" => 0,
     "JSON::PP" => 0,
@@ -27,7 +25,7 @@ my %module_build_args = (
     "Olaf Alders <olaf\@wundercounter.com> (current maintainer)"
   ],
   "dist_name" => "HTTP-BrowserDetect",
-  "dist_version" => "1.44",
+  "dist_version" => "1.45",
   "license" => "perl",
   "module_name" => "HTTP::BrowserDetect",
   "recommends" => {},

@@ -2,7 +2,7 @@ use strict;
 
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.44';
+  $HTTP::BrowserDetect::VERSION = '1.45';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -238,6 +238,7 @@ sub _test {
     # Browser version
     my ( $major, $minor, $beta ) = (
         $ua =~ m{
+            \S+                     # Greedly catch anything leading up to forward slash.
             \/                      # Version starts with a slash
             [A-Za-z]*               # Eat any letters before the major version
             ( [^.]* )               # Major version number is everything before the first dot
@@ -542,6 +543,8 @@ sub _test {
 
     $tests->{BLACKBERRY} = ( index( $ua, "blackberry" ) != -1 );
     $tests->{IPHONE}     = ( index( $ua, "iphone" ) != -1 );
+    $tests->{WINCE}      = ( index( $ua, "windows ce" ) != -1 );
+    $tests->{WINPHONE}   = ( index( $ua, "windows phone" ) != -1 );
     $tests->{WEBOS}      = ( index( $ua, "webos" ) != -1 );
     $tests->{IPOD}       = ( index( $ua, "ipod" ) != -1 );
     $tests->{IPAD}       = ( index( $ua, "ipad" ) != -1 );
@@ -549,10 +552,10 @@ sub _test {
     $tests->{AUDREY}     = ( index( $ua, "audrey" ) != -1 );
     $tests->{IOPENER}    = ( index( $ua, "i-opener" ) != -1 );
     $tests->{AVANTGO}    = ( index( $ua, "avantgo" ) != -1 );
-    $tests->{PALM} = ( $tests->{AVANTGO} || index( $ua, "palmos" ) != -1 );
-    $tests->{WAP}
-        = (    index( $ua, "up.browser" ) != -1
-            || index( $ua, "nokia" ) != -1
+    $tests->{PALM}       = ( $tests->{AVANTGO} || index( $ua, "palmos" ) != -1 );
+    $tests->{WAP}        = (
+               index( $ua, "up.browser" ) != -1
+            || ( index( $ua, "nokia" ) != -1 && !$tests->{WINPHONE} )
             || index( $ua, "alcatel" ) != -1
             || index( $ua, "ericsson" ) != -1
             || index( $ua, "sie-" ) == 0
@@ -647,9 +650,6 @@ sub _test {
     $tests->{WINVISTA} = ( index( $ua, "nt 6.0" ) != -1 );
     $tests->{WIN7}     = ( index( $ua, "nt 6.1" ) != -1 );
     $tests->{DOTNET}   = ( index( $ua, ".net clr" ) != -1 );
-
-    $tests->{WINCE}    = ( index( $ua, "windows ce" ) != -1 );
-    $tests->{WINPHONE} = ( index( $ua, "windows phone os" ) != -1 );
 
     $tests->{WINME} = ( index( $ua, "win 9x 4.90" ) != -1 );    # whatever
     $tests->{WIN32} = (
@@ -812,6 +812,12 @@ sub _test {
     $self->{device_name} = undef;
 
     if ( $ua =~ /windows phone os [^\)]+ iemobile\/[^;]+; ([^;]+; [^;\)]+)/g )
+    {
+        $self->{device_name} = substr $self->{user_agent},
+            pos( $ua ) - length $1, length $1;
+        $self->{device_name} =~ s/; / /;
+    }
+    elsif ( $ua =~ /windows phone [^\)]+ iemobile\/[^;]+; arm; touch; ([^;]+; [^;\)]+)/g )
     {
         $self->{device_name} = substr $self->{user_agent},
             pos( $ua ) - length $1, length $1;
@@ -1224,7 +1230,7 @@ sub browser_properties {
 
 # ABSTRACT: Determine Web browser, version, and platform from an HTTP user agent string
 
-
+__END__
 
 =pod
 
@@ -1234,7 +1240,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.44
+version 1.45
 
 =head1 SYNOPSIS
 
@@ -1818,7 +1824,3 @@ This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
 
 =cut
-
-
-__END__
-
