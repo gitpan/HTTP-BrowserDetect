@@ -2,7 +2,7 @@ use strict;
 
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.45';
+  $HTTP::BrowserDetect::VERSION = '1.46';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -25,7 +25,8 @@ our @WINDOWS_TESTS = qw(
     win95 win98   winnt
     winme win32   win2k
     winxp win2k3  winvista
-    win7  wince   winphone
+    win7  win8    wince
+    winphone
 );
 
 # More precise Mac
@@ -649,6 +650,7 @@ sub _test {
     $tests->{WIN2K3}   = ( index( $ua, "nt 5.2" ) != -1 );
     $tests->{WINVISTA} = ( index( $ua, "nt 6.0" ) != -1 );
     $tests->{WIN7}     = ( index( $ua, "nt 6.1" ) != -1 );
+    $tests->{WIN8}     = ( index( $ua, "nt 6.2" ) != -1 );
     $tests->{DOTNET}   = ( index( $ua, ".net clr" ) != -1 );
 
     $tests->{WINME} = ( index( $ua, "win 9x 4.90" ) != -1 );    # whatever
@@ -663,6 +665,7 @@ sub _test {
             || $tests->{WIN2K3}
             || $tests->{WINVISTA}
             || $tests->{WIN7}
+            || $tests->{WIN8}
             || index( $ua, "win32" ) != -1
     );
     $tests->{WINDOWS} = (
@@ -677,6 +680,7 @@ sub _test {
                 || $tests->{WIN2K3}
                 || $tests->{WINVISTA}
                 || $tests->{WIN7}
+                || $tests->{WIN8}
                 || $tests->{WINME}
                 || $tests->{WINCE}
                 || $tests->{WINPHONE}
@@ -872,6 +876,7 @@ sub os_string {
         $os_string = 'Win2k3'               if $self->win2k3;
         $os_string = 'WinVista'             if $self->winvista;
         $os_string = 'Win7'                 if $self->win7;
+        $os_string = 'Win8'                 if $self->win8;
         $os_string = 'Windows Phone'        if $self->winphone;
         $os_string = 'Mac'                  if $self->mac;
         $os_string = 'Mac OS X'             if $self->macosx;
@@ -1240,7 +1245,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.45
+version 1.46
 
 =head1 SYNOPSIS
 
@@ -1440,7 +1445,7 @@ winnt, which is a type of win32)
     win32
         winme win95 win98
         winnt
-            win2k winxp win2k3 winvista win7
+            win2k winxp win2k3 winvista win7 win8
     wince
     winphone
 
@@ -1475,9 +1480,9 @@ distinguish between Win95 and WinNT.
 Returns one of the following strings, or undef. This method exists solely for
 compatibility with the L<HTTP::Headers::UserAgent> module.
 
-  Win95, Win98, WinNT, Win2K, WinXP, Win2k3, WinVista, Win7, Windows Phone,
-  Mac, Mac OS X, iOS, Win3x, OS2, Unix, Linux, Playstation 3 GameOS,
-  Playstation Portable GameOS
+  Win95, Win98, WinNT, Win2K, WinXP, Win2k3, WinVista, Win7, Win8,
+  Windows Phone, Mac, Mac OS X, iOS, Win3x, OS2, Unix, Linux,
+  Playstation 3 GameOS, Playstation Portable GameOS
 
 =head1 Detecting Browser Vendor
 
@@ -1725,6 +1730,8 @@ Bill Rhodes
 
 Thom Blake
 
+Aran Deltac
+
 =head1 TO DO
 
 The C<_engine()> method currently only handles Gecko and Trident.  It needs to
@@ -1774,7 +1781,7 @@ L<http://cpanratings.perl.org/d/HTTP-BrowserDetect>
 
 =item * Search CPAN
 
-L<http://beta.metacpan.org/module/HTTP::BrowserDetect>
+L<https://metacpan.org/module/HTTP::BrowserDetect>
 
 =back
 
