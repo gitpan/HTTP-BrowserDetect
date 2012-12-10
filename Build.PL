@@ -12,7 +12,7 @@ my %module_build_args = (
     "JSON::PP" => 0,
     "Module::Build" => "0.3601",
     "Test::More" => 0,
-    "warnings" => 0
+    "Test::NoWarnings" => 0
   },
   "configure_requires" => {
     "ExtUtils::MakeMaker" => "6.30",
@@ -25,7 +25,7 @@ my %module_build_args = (
     "Olaf Alders <olaf\@wundercounter.com> (current maintainer)"
   ],
   "dist_name" => "HTTP-BrowserDetect",
-  "dist_version" => "1.46",
+  "dist_version" => "1.47",
   "license" => "perl",
   "module_name" => "HTTP::BrowserDetect",
   "recommends" => {},
@@ -33,7 +33,8 @@ my %module_build_args = (
   "requires" => {
     "Exporter" => 0,
     "strict" => 0,
-    "vars" => 0
+    "vars" => 0,
+    "warnings" => 0
   },
   "script_files" => []
 );

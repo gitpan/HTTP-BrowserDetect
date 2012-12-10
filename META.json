@@ -31,7 +31,8 @@
          "requires" : {
             "Exporter" : "0",
             "strict" : "0",
-            "vars" : "0"
+            "vars" : "0",
+            "warnings" : "0"
          }
       },
       "test" : {
@@ -40,7 +41,7 @@
             "FindBin" : "0",
             "JSON::PP" : "0",
             "Test::More" : "0",
-            "warnings" : "0"
+            "Test::NoWarnings" : "0"
          }
       }
    },
@@ -56,6 +57,6 @@
          "web" : "https://github.com/oalders/http-browserdetect"
       }
    },
-   "version" : "1.46"
+   "version" : "1.47"
 }
 

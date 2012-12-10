@@ -17,7 +17,7 @@ my %WriteMakefileArgs = (
     "JSON::PP" => 0,
     "Module::Build" => "0.3601",
     "Test::More" => 0,
-    "warnings" => 0
+    "Test::NoWarnings" => 0
   },
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => "6.30",
@@ -30,9 +30,10 @@ my %WriteMakefileArgs = (
   "PREREQ_PM" => {
     "Exporter" => 0,
     "strict" => 0,
-    "vars" => 0
+    "vars" => 0,
+    "warnings" => 0
   },
-  "VERSION" => "1.46",
+  "VERSION" => "1.47",
   "test" => {
     "TESTS" => "t/*.t"
   }

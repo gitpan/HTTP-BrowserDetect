@@ -1,8 +1,9 @@
 use strict;
+use warnings;
 
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.46';
+  $HTTP::BrowserDetect::VERSION = '1.47';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -21,12 +22,13 @@ our @OS_TESTS = qw(
 
 # More precise Windows
 our @WINDOWS_TESTS = qw(
-    win16 win3x   win31
-    win95 win98   winnt
-    winme win32   win2k
-    winxp win2k3  winvista
-    win7  win8    wince
-    winphone
+    win16    win3x     win31
+    win95    win98     winnt
+    winme    win32     win2k
+    winxp    win2k3    winvista
+    win7     win8      wince
+    winphone winphone7 winphone7_5
+    winphone8
 );
 
 # More precise Mac
@@ -688,6 +690,10 @@ sub _test {
             || index( $ua, "win" ) != -1
     );
 
+    $tests->{WINPHONE7}   = ( index( $ua, "windows phone os 7.0" ) != -1 );
+    $tests->{WINPHONE7_5} = ( index( $ua, "windows phone os 7.5" ) != -1 );
+    $tests->{WINPHONE8}   = ( index( $ua, "windows phone 8.0" ) != -1 );
+
     # Mac operating systems
 
     $tests->{MAC}
@@ -1245,7 +1251,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.46
+version 1.47
 
 =head1 SYNOPSIS
 
@@ -1418,7 +1424,7 @@ Returns C<undef> if no string can be found.
 
 Returns the version number of the rendering engine. Currently this only
 returns a version number for Gecko and Trident. Returns C<undef> for all
-other engines.
+other engines. The output is simply C<engine_major> added with C<engine_minor>.
 
 =head2 engine_major()
 
@@ -1448,6 +1454,7 @@ winnt, which is a type of win32)
             win2k winxp win2k3 winvista win7 win8
     wince
     winphone
+        winphone7 winphone7_5 winphone8
 
 =head2 dotnet()
 
