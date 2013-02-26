@@ -3,7 +3,7 @@ use warnings;
 
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.47';
+  $HTTP::BrowserDetect::VERSION = '1.48';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -85,7 +85,7 @@ our @BROWSER_TESTS = qw(
     elinks        neoplanet   neoplanet2
     avantgo       emacs       mozilla
     konqueror     r1          netfront
-    mobile_safari
+    mobile_safari obigo
 );
 
 our @IE_TESTS = qw(
@@ -556,8 +556,10 @@ sub _test {
     $tests->{IOPENER}    = ( index( $ua, "i-opener" ) != -1 );
     $tests->{AVANTGO}    = ( index( $ua, "avantgo" ) != -1 );
     $tests->{PALM}       = ( $tests->{AVANTGO} || index( $ua, "palmos" ) != -1 );
+    $tests->{OBIGO}      = ( index( $ua, "obigo/" ) != -1 );
     $tests->{WAP}        = (
-               index( $ua, "up.browser" ) != -1
+               $tests->{OBIGO}
+            || index( $ua, "up.browser" ) != -1
             || ( index( $ua, "nokia" ) != -1 && !$tests->{WINPHONE} )
             || index( $ua, "alcatel" ) != -1
             || index( $ua, "ericsson" ) != -1
@@ -821,7 +823,12 @@ sub _test {
 
     $self->{device_name} = undef;
 
-    if ( $ua =~ /windows phone os [^\)]+ iemobile\/[^;]+; ([^;]+; [^;\)]+)/g )
+    if ( $tests->{OBIGO} && $ua =~ /^(mot-\S+)/ )
+    {
+        $self->{device_name} = substr $self->{user_agent}, 0, length $1;
+        $self->{device_name} =~ s/^MOT-/Motorola /i;
+    }
+    elsif ( $ua =~ /windows phone os [^\)]+ iemobile\/[^;]+; ([^;]+; [^;\)]+)/g )
     {
         $self->{device_name} = substr $self->{user_agent},
             pos( $ua ) - length $1, length $1;
@@ -851,6 +858,7 @@ sub browser_string {
         $browser_string = 'MSIE'          if $self->ie;
         $browser_string = 'WebTV'         if $self->webtv;
         $browser_string = 'AOL Browser'   if $self->aol;
+        $browser_string = 'Obigo'         if $self->obigo;
         $browser_string = 'Opera'         if $self->opera;
         $browser_string = 'Mosaic'        if $self->mosaic;
         $browser_string = 'Lynx'          if $self->lynx;
@@ -1251,7 +1259,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.47
+version 1.48
 
 =head1 SYNOPSIS
 
@@ -1597,6 +1605,8 @@ The following methods are available, each returning a true or false value.
 
 =head3 n3ds
 
+=head3 obigo
+
 =head3 palm
 
 =head3 webos
@@ -1832,7 +1842,7 @@ Olaf Alders <olaf@wundercounter.com> (current maintainer)
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Lee Semel.
+This software is copyright (c) 2013 by Lee Semel.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
