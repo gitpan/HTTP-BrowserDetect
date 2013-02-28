@@ -3,7 +3,7 @@ use warnings;
 
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.48';
+  $HTTP::BrowserDetect::VERSION = '1.49';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -1191,7 +1191,7 @@ sub _language_country {
         {
             return { language => uc $1 };
         }
-        if ( $self->user_agent =~ m/([a-z]{2})-([a-z]{2})/xms ) {
+        if ( $self->user_agent =~ m/\s ([a-z]{2})-([A-Za-z]{2})/xms ) {
             return { language => uc $1, country => uc $2 };
         }
     }
@@ -1259,7 +1259,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.48
+version 1.49
 
 =head1 SYNOPSIS
 
