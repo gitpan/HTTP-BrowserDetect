@@ -3,7 +3,7 @@ use warnings;
 
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.49';
+  $HTTP::BrowserDetect::VERSION = '1.50';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -17,7 +17,7 @@ require Exporter;
 our @OS_TESTS = qw(
     windows mac   os2
     unix    linux vms
-    bsd     amiga
+    bsd     amiga firefoxos
 );
 
 # More precise Windows
@@ -579,7 +579,8 @@ sub _test {
     $tests->{'N3DS'} = ( index( $ua, "nintendo 3ds" ) != -1 );
 
     $tests->{MOBILE} = (
-               index( $ua, "up.browser" ) != -1
+               ( $tests->{FIREFOX} && index( $ua, "mobile" ) != -1 )
+            || index( $ua, "up.browser" ) != -1
             || index( $ua, "nokia" ) != -1
             || index( $ua, "alcatel" ) != -1
             || index( $ua, "ericsson" ) != -1
@@ -772,6 +773,12 @@ sub _test {
 
     $tests->{ANDROID} = ( index( $ua, "android" ) != -1 );
 
+    $tests->{FIREFOXOS}
+        = (    $tests->{FIREFOX}
+            && $tests->{MOBILE}
+            && !$tests->{ANDROID}
+            && index( $ua, "fennec" ) == -1 );
+
     $tests->{PS3GAMEOS} = $tests->{PS3} && $tests->{NETFRONT};
     $tests->{PSPGAMEOS} = $tests->{PSP} && $tests->{NETFRONT};
 
@@ -898,6 +905,7 @@ sub os_string {
         $os_string = 'OS2'                  if $self->os2;
         $os_string = 'Unix'                 if $self->unix && !$self->linux;
         $os_string = 'Linux'                if $self->linux;
+        $os_string = 'Firefox OS'           if $self->firefoxos;
         $os_string = 'Playstation 3 GameOS' if $self->ps3gameos;
         $os_string = 'Playstation Portable GameOS' if $self->pspgameos;
         $os_string = 'iOS' if $self->iphone || $self->ipod || $self->ipad;
@@ -1259,7 +1267,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.49
+version 1.50
 
 =head1 SYNOPSIS
 
@@ -1466,6 +1474,8 @@ winnt, which is a type of win32)
 
 =head2 dotnet()
 
+=head2 firefoxos()
+
 =head2 mac()
 
 mac68k macppc macosx ios
@@ -1497,7 +1507,7 @@ compatibility with the L<HTTP::Headers::UserAgent> module.
 
   Win95, Win98, WinNT, Win2K, WinXP, Win2k3, WinVista, Win7, Win8,
   Windows Phone, Mac, Mac OS X, iOS, Win3x, OS2, Unix, Linux,
-  Playstation 3 GameOS, Playstation Portable GameOS
+  Firefox OS, Playstation 3 GameOS, Playstation Portable GameOS
 
 =head1 Detecting Browser Vendor
 
