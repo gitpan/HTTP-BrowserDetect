@@ -6,7 +6,7 @@
       "Olaf Alders <olaf@wundercounter.com> (current maintainer)"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300028, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Dist::Zilla version 4.300033, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "perl_5"
    ],
@@ -40,7 +40,9 @@
             "File::Slurp" : "0",
             "FindBin" : "0",
             "JSON::PP" : "0",
+            "Test::FailWarnings" : "0",
             "Test::More" : "0",
+            "Test::Most" : "0",
             "Test::NoWarnings" : "0"
          }
       }
@@ -57,6 +59,28 @@
          "web" : "https://github.com/oalders/http-browserdetect"
       }
    },
-   "version" : "1.50"
+   "version" : "1.51",
+   "x_contributors" : [
+      "Aran Deltac <bluefeet@gmail.com>",
+      "Douglas Christopher Wilson <doug@somethingdoug.com>",
+      "Graham Barr <gbarr@pobox.com>",
+      "Jon Jensen <jon@endpoint.com>",
+      "Maros Kollar <maros@k-1.com>",
+      "Olaf Alders <olaf@Macintosh-9.local>",
+      "Olaf Alders <olaf@wundersolutions.com>",
+      "Olivier Bilodeau <olivier@bottomlesspit.org>",
+      "Paul Findlay <paul@findlay.net.nz>",
+      "Robin Smidsr\u00c3\u00b8d <robin@smidsrod.no>",
+      "Ronald J Kimball <rkimball@pangeamedia.com>",
+      "Surikov Alexey <surikov@alexey-pc.kiteventures.local>",
+      "Thom Blake <thom@odonnellpdc.com>",
+      "Uwe <uwe@uwevoelker.de>",
+      "cho45 <cho45@lowreal.net>",
+      "joatis <joatis3@gmail.com>",
+      "ktat <ktat.is@gmail.com>",
+      "lsaunders <lsaunders@dev05.backbone.i5invest.com>",
+      "vti <viacheslav.t@gmail.com>",
+      "yeahoffline <frank.gasser@gmail.com>"
+   ]
 }
 

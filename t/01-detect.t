@@ -6,8 +6,8 @@ use warnings;
 use File::Slurp;
 use FindBin;
 use JSON::PP;
-use Test::More qw( no_plan );
-use Test::NoWarnings;
+use Test::Most;
+use Test::FailWarnings;
 
 # test that the module loads without errors
 my $w;
@@ -48,6 +48,7 @@ foreach my $ua ( sort keys %{$tests} ) {
         engine_major
         engine_minor
         ios
+        tablet
         )
         )
     {
@@ -117,3 +118,5 @@ foreach my $method (
     is_deeply([$detected->$method], [undef],
               "$method should return undef in list context" );
 }
+
+done_testing();
