@@ -59,7 +59,7 @@
          "web" : "https://github.com/oalders/http-browserdetect"
       }
    },
-   "version" : "1.51",
+   "version" : "1.52",
    "x_contributors" : [
       "Aran Deltac <bluefeet@gmail.com>",
       "Douglas Christopher Wilson <doug@somethingdoug.com>",

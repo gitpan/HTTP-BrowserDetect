@@ -3,7 +3,7 @@ use warnings;
 
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.51';
+  $HTTP::BrowserDetect::VERSION = '1.52';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -269,25 +269,21 @@ sub _test {
 
     }
 
-    # IE version
+    # IE (and many others ) version
     if ($ua =~ m{
                 compatible;
                 \s*
                 \w*
                 [\s|\/]
                 [A-Za-z\-\/]*       # Eat any letters before the major version
-                ( [^.]* )           # Major version number is everything before first dot
-                \.                  # The first dot
-                ( [\d]* )           # Minor version nnumber is digits after first dot
-                [\d.]*              # Throw away remaining dots and digits
-                ( [^;]* )           # Beta version is up to the ;
+                ( [0-9a-zA-Z\.]* )  # Grab everything else and split it later
                 ;
         }x
         )
     {
-        $major = $1;
-        $minor = $2;
-        $beta  = $3;
+        my $match = $1;
+        $match =~ s{[a-zA-Z].*}{}g; # toss the beta version for now
+        ( $major, $minor, $beta ) = split /\./, $match;
 
     }
 
@@ -1293,7 +1289,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.51
+version 1.52
 
 =head1 SYNOPSIS
 
