@@ -6,7 +6,7 @@
       "Olaf Alders <olaf@wundercounter.com> (current maintainer)"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300033, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Dist::Zilla version 4.300035, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "perl_5"
    ],
@@ -59,7 +59,7 @@
          "web" : "https://github.com/oalders/http-browserdetect"
       }
    },
-   "version" : "1.52",
+   "version" : "1.53",
    "x_contributors" : [
       "Aran Deltac <bluefeet@gmail.com>",
       "Douglas Christopher Wilson <doug@somethingdoug.com>",
@@ -70,7 +70,7 @@
       "Olaf Alders <olaf@wundersolutions.com>",
       "Olivier Bilodeau <olivier@bottomlesspit.org>",
       "Paul Findlay <paul@findlay.net.nz>",
-      "Robin Smidsr\u00c3\u00b8d <robin@smidsrod.no>",
+      "Robin Smidsr\u00f8d <robin@smidsrod.no>",
       "Ronald J Kimball <rkimball@pangeamedia.com>",
       "Surikov Alexey <surikov@alexey-pc.kiteventures.local>",
       "Thom Blake <thom@odonnellpdc.com>",

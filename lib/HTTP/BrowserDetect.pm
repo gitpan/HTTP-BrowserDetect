@@ -3,7 +3,7 @@ use warnings;
 
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.52';
+  $HTTP::BrowserDetect::VERSION = '1.53';
 }
 
 use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
@@ -18,6 +18,7 @@ our @OS_TESTS = qw(
     windows mac   os2
     unix    linux vms
     bsd     amiga firefoxos
+    rimtabletos
 );
 
 # More precise Windows
@@ -269,21 +270,14 @@ sub _test {
 
     }
 
-    # IE (and many others ) version
-    if ($ua =~ m{
-                compatible;
-                \s*
-                \w*
-                [\s|\/]
-                [A-Za-z\-\/]*       # Eat any letters before the major version
-                ( [0-9a-zA-Z\.]* )  # Grab everything else and split it later
-                ;
-        }x
-        )
-    {
-        my $match = $1;
-        $match =~ s{[a-zA-Z].*}{}g; # toss the beta version for now
-        ( $major, $minor, $beta ) = split /\./, $match;
+    # IE (and others) version
+    if ( $ua =~ m{\b msie \s ( [0-9\.]+ ) (?: [a-z]+ [a-z0-9]* )? ;}x ) {
+        # Internet Explorer
+        ( $major, $minor, $beta ) = split /\./, $1;
+    }
+    elsif ( $ua =~ m{\b compatible; \s* [\w\-]* / ( [0-9\.]* ) (?: [a-z]+ [a-z0-9\.]* )? ;}x ) {
+        # Generic "compatible" formats
+        ( $major, $minor, $beta ) = split /\./, $1;
 
     }
 
@@ -362,6 +356,7 @@ sub _test {
             && !$tests->{SAFARI}
             && !$tests->{CHROME}
             && index( $ua, "mozilla" ) != -1
+            && index( $ua, "msie" ) == -1
             && index( $ua, "spoofer" ) == -1
             && index( $ua, "compatible" ) == -1
             && index( $ua, "opera" ) == -1
@@ -540,7 +535,7 @@ sub _test {
 
     # Devices
 
-    $tests->{BLACKBERRY} = ( index( $ua, "blackberry" ) != -1 );
+    $tests->{BLACKBERRY} = ( index( $ua, "blackberry" ) != -1 || index( $ua, "rim tablet os" ) != -1 );
     $tests->{IPHONE}     = ( index( $ua, "iphone" ) != -1 );
     $tests->{WINCE}      = ( index( $ua, "windows ce" ) != -1 );
     $tests->{WINPHONE}   = ( index( $ua, "windows phone" ) != -1 );
@@ -577,6 +572,7 @@ sub _test {
     
     $tests->{MOBILE} = (
                ( $tests->{FIREFOX} && index( $ua, "mobile" ) != -1 )
+            || ( $tests->{IE} && !$tests->{WINPHONE} && index( $ua, "arm" ) != -1 )
             || index( $ua, "up.browser" ) != -1
             || index( $ua, "nokia" ) != -1
             || index( $ua, "alcatel" ) != -1
@@ -612,6 +608,7 @@ sub _test {
             || index( $ua, "opera mobi" ) != -1
             || index( $ua, "fennec" ) != -1
             || index( $ua, "opera tablet" ) != -1
+            || index( $ua, "rim tablet" ) != -1
             || $tests->{PSP}
             || $tests->{DSI}
             || $tests->{'N3DS'}
@@ -622,6 +619,7 @@ sub _test {
     
     $tests->{TABLET} = (
              index( $ua, "ipad" ) != -1
+            || ( $tests->{IE} && !$tests->{WINPHONE} && index( $ua, "arm" ) != -1 )
             || (index( $ua, "android" ) != -1 && index( $ua, "mobile" ) == -1  && index( $ua, "opera" ) == -1 )
             || index( $ua, "kindle" ) != -1
             || index( $ua, "xoom" ) != -1
@@ -642,6 +640,7 @@ sub _test {
             || index( $ua, "an10bg3" ) != -1
             || index( $ua, "an10bg3dt" ) != -1
             || index( $ua, "opera tablet" ) != -1
+            || index( $ua, "rim tablet" ) != -1
             || index( $ua, "hp-tablet" ) != -1
  
     
@@ -801,6 +800,8 @@ sub _test {
             && !$tests->{ANDROID}
             && index( $ua, "fennec" ) == -1 );
 
+    $tests->{RIMTABLETOS} = ( index( $ua, "rim tablet os" ) != -1 );
+
     $tests->{PS3GAMEOS} = $tests->{PS3} && $tests->{NETFRONT};
     $tests->{PSPGAMEOS} = $tests->{PSP} && $tests->{NETFRONT};
 
@@ -928,6 +929,7 @@ sub os_string {
         $os_string = 'Unix'                 if $self->unix && !$self->linux;
         $os_string = 'Linux'                if $self->linux;
         $os_string = 'Firefox OS'           if $self->firefoxos;
+        $os_string = 'RIM Tablet OS'        if $self->rimtabletos;
         $os_string = 'Playstation 3 GameOS' if $self->ps3gameos;
         $os_string = 'Playstation Portable GameOS' if $self->pspgameos;
         $os_string = 'iOS' if $self->iphone || $self->ipod || $self->ipad;
@@ -1289,7 +1291,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.52
+version 1.53
 
 =head1 SYNOPSIS
 
@@ -1504,6 +1506,8 @@ mac68k macppc macosx ios
 
 =head2 os2()
 
+=head2 rimtabletos()
+
 =head2 unix()
 
   sun sun4 sun5 suni86 irix irix5 irix6 hpux hpux9 hpux10
@@ -1529,7 +1533,8 @@ compatibility with the L<HTTP::Headers::UserAgent> module.
 
   Win95, Win98, WinNT, Win2K, WinXP, Win2k3, WinVista, Win7, Win8,
   Windows Phone, Mac, Mac OS X, iOS, Win3x, OS2, Unix, Linux,
-  Firefox OS, Playstation 3 GameOS, Playstation Portable GameOS
+  Firefox OS, Playstation 3 GameOS, Playstation Portable GameOS,
+  RIM Tablet OS
 
 =head1 Detecting Browser Vendor
 
