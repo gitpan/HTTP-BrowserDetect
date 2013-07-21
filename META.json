@@ -29,7 +29,6 @@
       },
       "runtime" : {
          "requires" : {
-            "Exporter" : "0",
             "strict" : "0",
             "vars" : "0",
             "warnings" : "0"
@@ -59,7 +58,7 @@
          "web" : "https://github.com/oalders/http-browserdetect"
       }
    },
-   "version" : "1.53",
+   "version" : "1.54",
    "x_contributors" : [
       "Aran Deltac <bluefeet@gmail.com>",
       "Douglas Christopher Wilson <doug@somethingdoug.com>",

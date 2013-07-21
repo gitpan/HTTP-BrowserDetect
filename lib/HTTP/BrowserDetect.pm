@@ -3,15 +3,10 @@ use warnings;
 
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.53';
+  $HTTP::BrowserDetect::VERSION = '1.54';
 }
 
-use vars qw(@ISA @EXPORT @EXPORT_OK @ALL_TESTS);
-require Exporter;
-
-@ISA       = qw(Exporter);
-@EXPORT    = qw();
-@EXPORT_OK = qw();
+use vars qw(@ALL_TESTS);
 
 # Operating Systems
 our @OS_TESTS = qw(
@@ -245,7 +240,7 @@ sub _test {
             \S+                     # Greedly catch anything leading up to forward slash.
             \/                      # Version starts with a slash
             [A-Za-z]*               # Eat any letters before the major version
-            ( [^.]* )               # Major version number is everything before the first dot
+            ( [0-9A-Za-z]* )        # Major version number is everything before the first dot
             \.                      # The first dot
             ( [\d]* )               # Minor version number is every digit after the first dot
             [\d.]*                  # Throw away remaining numbers and dots
@@ -1070,12 +1065,12 @@ sub _public {
                 # lower build
 
                 for my $maybe_build (
-                    sort { $b <=> $a }
+                    sort { $self->_cmp_versions($b, $a) }
                     keys %safari_build_to_version
                     )
                 {
                     $version = $safari_build_to_version{$maybe_build}, last
-                        if $build >= $maybe_build;
+                        if $self->_cmp_versions($build, $maybe_build) >= 0;
                 }
             }
             my ( $major, $minor ) = split /\./, $version;
@@ -1087,6 +1082,22 @@ sub _public {
     }
 
     return ( $self->major, $self->minor, $self->beta( $check ) );
+}
+
+sub _cmp_versions {
+    my ( $self, $a, $b ) = @_;
+
+    my @a = split /\./, $a;
+    my @b = split /\./, $b;
+
+    while ( @b ) {
+        return -1 if @a == 0 || $a[0] < $b[0];
+        return  1 if @b == 0 || $b[0] < $a[0];
+        shift @a;
+        shift @b;
+    }
+
+    return @a <=> @b;
 }
 
 sub engine_string {
@@ -1291,7 +1302,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.53
+version 1.54
 
 =head1 SYNOPSIS
 

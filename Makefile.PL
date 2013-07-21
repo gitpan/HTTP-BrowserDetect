@@ -23,7 +23,6 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "HTTP::BrowserDetect",
   "PREREQ_PM" => {
-    "Exporter" => 0,
     "strict" => 0,
     "vars" => 0,
     "warnings" => 0
@@ -37,7 +36,7 @@ my %WriteMakefileArgs = (
     "Test::Most" => 0,
     "Test::NoWarnings" => 0
   },
-  "VERSION" => "1.53",
+  "VERSION" => "1.54",
   "test" => {
     "TESTS" => "t/*.t"
   }
