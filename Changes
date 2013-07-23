@@ -1,5 +1,8 @@
 Revision history for Perl extension HTTP::BrowserDetect.
 
+1.55 2013-07-22 23:06:40 America/Toronto
+    - Add all current Google robot user agents (Douglas Christopher Wilson)
+
 1.54 2013-07-21
     - Fix generic version parsing not to cross whitespace (Douglas Christopher
       Wilson)

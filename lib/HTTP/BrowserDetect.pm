@@ -3,7 +3,7 @@ use warnings;
 
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.54';
+  $HTTP::BrowserDetect::VERSION = '1.55';
 }
 
 use vars qw(@ALL_TESTS);
@@ -126,7 +126,7 @@ our @ROBOT_TESTS = qw(
     lotusnotes   icab        google
     googlemobile msn         msnmobile
     facebook     baidu       googleadsbot
-    askjeeves
+    askjeeves    googleadsense
 );
 
 our @MISC_TESTS = qw(
@@ -475,18 +475,19 @@ sub _test {
         = (    index( $ua, "java" ) != -1
             || index( $ua, "jdk" ) != -1
             || index( $ua, "jakarta commons-httpclient" ) != -1 );
-    $tests->{ALTAVISTA}    = ( index( $ua, "altavista" ) != -1 );
-    $tests->{SCOOTER}      = ( index( $ua, "scooter" ) != -1 );
-    $tests->{LYCOS}        = ( index( $ua, "lycos" ) != -1 );
-    $tests->{INFOSEEK}     = ( index( $ua, "infoseek" ) != -1 );
-    $tests->{WEBCRAWLER}   = ( index( $ua, "webcrawler" ) != -1 );
-    $tests->{LINKEXCHANGE} = ( index( $ua, "lecodechecker" ) != -1 );
-    $tests->{SLURP}        = ( index( $ua, "slurp" ) != -1 );
-    $tests->{FACEBOOK}     = ( index( $ua, "facebookexternalhit" ) != -1 );
-    $tests->{BAIDU}        = ( index( $ua, "baiduspider" ) != -1 );
-    $tests->{GOOGLEADSBOT} = ( index( $ua, "adsbot-google" ) != -1 );
-    $tests->{ASKJEEVES}    = ( index( $ua, "ask jeeves/teoma" ) != -1 );
-    $tests->{ROBOT}        = (
+    $tests->{ALTAVISTA}     = ( index( $ua, "altavista" ) != -1 );
+    $tests->{SCOOTER}       = ( index( $ua, "scooter" ) != -1 );
+    $tests->{LYCOS}         = ( index( $ua, "lycos" ) != -1 );
+    $tests->{INFOSEEK}      = ( index( $ua, "infoseek" ) != -1 );
+    $tests->{WEBCRAWLER}    = ( index( $ua, "webcrawler" ) != -1 );
+    $tests->{LINKEXCHANGE}  = ( index( $ua, "lecodechecker" ) != -1 );
+    $tests->{SLURP}         = ( index( $ua, "slurp" ) != -1 );
+    $tests->{FACEBOOK}      = ( index( $ua, "facebookexternalhit" ) != -1 );
+    $tests->{BAIDU}         = ( index( $ua, "baiduspider" ) != -1 );
+    $tests->{GOOGLEADSBOT}  = ( index( $ua, "adsbot-google" ) != -1 );
+    $tests->{GOOGLEADSENSE} = ( index( $ua, "mediapartners-google" ) != -1 );
+    $tests->{ASKJEEVES}     = ( index( $ua, "ask jeeves/teoma" ) != -1 );
+    $tests->{ROBOT}         = (
         (          $tests->{WGET}
                 || $tests->{PUF}
                 || $tests->{GETRIGHT}
@@ -506,6 +507,7 @@ sub _test {
                 || $tests->{JAVA}
                 || $tests->{BAIDU}
                 || $tests->{GOOGLEADSBOT}
+                || $tests->{GOOGLEADSENSE}
                 || $tests->{ASKJEEVES}
         )
             || index( $ua, "bot" ) != -1
@@ -1302,7 +1304,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.54
+version 1.55
 
 =head1 SYNOPSIS
 
@@ -1694,6 +1696,8 @@ value. This is by no means a complete list of robots that exist on the Web.
 =head3 google
 
 =head3 googleadsbot
+
+=head3 googleadsense
 
 =head3 googlemobile
 
