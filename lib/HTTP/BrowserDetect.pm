@@ -3,7 +3,7 @@ use warnings;
 
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.55';
+  $HTTP::BrowserDetect::VERSION = '1.56';
 }
 
 use vars qw(@ALL_TESTS);
@@ -1290,6 +1290,15 @@ sub browser_properties {
 
     return @browser_properties;
 }
+
+sub robot_name {
+    my $self = shift;
+    foreach my $name ( @ROBOT_TESTS ) {
+        next if $name eq 'robot';
+        return $name if $self->$name;
+    }
+}
+
 1;
 
 # ABSTRACT: Determine Web browser, version, and platform from an HTTP user agent string
@@ -1304,7 +1313,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.55
+version 1.56
 
 =head1 SYNOPSIS
 
