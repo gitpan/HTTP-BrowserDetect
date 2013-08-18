@@ -3,7 +3,7 @@ use warnings;
 
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.58';
+  $HTTP::BrowserDetect::VERSION = '1.59';
 }
 
 use vars qw(@ALL_TESTS);
@@ -135,6 +135,7 @@ my %ROBOTS = (
     googlemobile   => 'Google Mobile',
     icab           => 'iCab',
     infoseek       => 'InfoSeek',
+    linkchecker    => 'LinkChecker',
     linkexchange   => 'LinkExchange',
     lotusnotes     => 'Lotus Notes',
     lwp            => 'LWP::UserAgent',
@@ -144,11 +145,13 @@ my %ROBOTS = (
     puf            => 'puf',
     robot          => 'robot',
     slurp          => 'Yahoo! Slurp',
+    specialarchiver => 'archive.org_bot',
     staroffice     => 'StarOffice',
     webcrawler     => 'WebCrawler',
     webtv          => 'WebTV',
     wget           => 'wget',
     yahoo          => 'Yahoo',
+    yandeximages   => 'YandexImages',
 );
 
 our @ROBOT_TESTS = qw(
@@ -163,6 +166,7 @@ our @ROBOT_TESTS = qw(
     facebook     baidu       googleadsbot
     askjeeves    googleadsense googlebotvideo
     googlebotnews googlebotimage google
+    linkchecker  yandeximages specialarchiver
 );
 
 our @MISC_TESTS = qw(
@@ -741,12 +745,15 @@ sub _robot_tests {
     $tests->{GOOGLE}         = ( index( $ua, "googlebot" ) != -1 );
     $tests->{INFOSEEK}       = ( index( $ua, "infoseek" ) != -1 );
     $tests->{LINKEXCHANGE}   = ( index( $ua, "lecodechecker" ) != -1 );
+    $tests->{LINKCHECKER}    = ( index( $ua, "linkchecker" ) != -1 );
     $tests->{LYCOS}          = ( index( $ua, "lycos" ) != -1 );
     $tests->{PUF}            = ( index( $ua, "puf/" ) != -1 );
     $tests->{SCOOTER}        = ( index( $ua, "scooter" ) != -1 );
     $tests->{SLURP}          = ( index( $ua, "slurp" ) != -1 );
+    $tests->{SPECIALARCHIVER}          = ( index( $ua, "special_archiver" ) != -1 );
     $tests->{WEBCRAWLER}     = ( index( $ua, "webcrawler" ) != -1 );
     $tests->{WGET}           = ( index( $ua, "wget" ) != -1 );
+    $tests->{YANDEXIMAGES}   = ( index( $ua, "yandeximages" ) != -1 );
 
     $tests->{ROBOT}
         = (    $tests->{ALTAVISTA}
@@ -764,15 +771,18 @@ sub _robot_tests {
             || $tests->{INFOSEEK}
             || $tests->{JAVA}
             || $tests->{LINKEXCHANGE}
+            || $tests->{LINKCHECKER}
             || $tests->{LWP}
             || $tests->{LYCOS}
             || $tests->{MSNMOBILE}
             || $tests->{MSN}
             || $tests->{PUF}
             || $tests->{SLURP}
+            || $tests->{SPECIALARCHIVER}
             || $tests->{WEBCRAWLER}
             || $tests->{WGET}
-            || $tests->{YAHOO} )
+            || $tests->{YAHOO}
+            || $tests->{YANDEXIMAGES} )
         || index( $ua, "agent" ) != -1
         || index( $ua, "bot" ) != -1
         || index( $ua, "copy" ) != -1
@@ -958,6 +968,38 @@ sub _os_tests {
     $tests->{PSPGAMEOS} = $tests->{PSP} && $tests->{NETFRONT};
 }
 
+# undocumented, experimental, volatile. not bothering with major/minor here as
+# that's flawed for 3 point versions the plan is to move this parsing into the
+# UeberAgent parser
+
+sub os_version {
+    my $self = shift;
+
+    if ( $self->ios && $self->{user_agent} =~ m{OS (\d*_\d*|\d*_\d*_\d*) like Mac} ) {
+        my $version = $1;
+        $version =~ s{_}{.}g;
+        return $version;
+    }
+
+    if ( $self->mac && $self->{user_agent} =~ m{ X \s (\d\d)_(\d)_(\d)}x ) {
+        return join '.', $1, $2, $3;
+    }
+
+    if (   $self->winphone
+       && $self->{user_agent} =~ m{Windows \s Phone \s \w{0,2} \s{0,1} (\d+\.\d+);}x )
+    {
+        return $1;
+    }
+
+    if ( $self->android && $self->{user_agent} =~ m{Android ([\d\.\w-]*)} ) {
+        return $1;
+    }
+
+    if ( $self->firefoxos && $self->{user_agent} =~ m{Firefox/([\d\.]*)} ) {
+        return $1;
+    }
+}
+
 # because the internals are the way they are, these tests have to happen in a
 # certain order.  hopefully we can change this once we have lazily loaded
 # attributes.  in the meantime, a pile of returns will do the job.  if we
@@ -971,8 +1013,6 @@ sub _os_tests {
 sub browser_string {
     my ( $self ) = _self_or_default( @_ );
     return unless defined $self->{user_agent};
-
-    return $self->robot_name if $self->robot;
 
     return 'Netscape'      if $self->netscape;
     return 'IceWeasel'     if $self->iceweasel;
@@ -1013,7 +1053,6 @@ sub os_string {
     return 'Win8'                        if $self->win8;
     return 'WinNT'                       if $self->winnt;
     return 'Windows Phone'               if $self->winphone;
-    return 'Mac'                         if $self->mac;
     return 'Mac OS X'                    if $self->macosx;
     return 'Win3x'                       if $self->win3x;
     return 'OS2'                         if $self->os2;
@@ -1024,6 +1063,7 @@ sub os_string {
     return 'Playstation 3 GameOS'        if $self->ps3gameos;
     return 'Playstation Portable GameOS' if $self->pspgameos;
     return 'iOS' if $self->iphone || $self->ipod || $self->ipad;
+    return 'Mac'                         if $self->mac;
     return;
 }
 
@@ -1412,7 +1452,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.58
+version 1.59
 
 =head1 SYNOPSIS
 
@@ -1725,13 +1765,6 @@ Returns undef on failure.  Otherwise returns one of the following:
 Netscape, Firefox, Safari, Chrome, MSIE, WebTV, AOL Browser, Opera, Mosaic,
 Lynx, Links, ELinks, RealPlayer, IceWeasel, curl, puf, NetFront, Mobile Safari,
 BlackBerry.
-
-If the browser is actually a bot, the bot name will be returned.  This
-functionality is in beta right now and subject to change, so you shouldn't rely
-on a given bot name to be returned at this point, but you should be aware that
-the list of names which this method can return is no longer restricted to the
-list as noted above.  This is considered a bug fix, since in the case of some
-bots browser_string returned information which was essentially just wrong.
 
 =head2 gecko_version()
 
