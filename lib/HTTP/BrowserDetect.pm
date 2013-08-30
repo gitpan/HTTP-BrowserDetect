@@ -3,7 +3,7 @@ use warnings;
 
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.59';
+  $HTTP::BrowserDetect::VERSION = '1.60';
 }
 
 use vars qw(@ALL_TESTS);
@@ -1053,17 +1053,18 @@ sub os_string {
     return 'Win8'                        if $self->win8;
     return 'WinNT'                       if $self->winnt;
     return 'Windows Phone'               if $self->winphone;
-    return 'Mac OS X'                    if $self->macosx;
     return 'Win3x'                       if $self->win3x;
-    return 'OS2'                         if $self->os2;
-    return 'Unix'                        if $self->unix && !$self->linux;
+    return 'Android'                     if $self->android;
     return 'Linux'                       if $self->linux;
+    return 'Unix'                        if $self->unix;
     return 'Firefox OS'                  if $self->firefoxos;
     return 'RIM Tablet OS'               if $self->rimtabletos;
     return 'Playstation 3 GameOS'        if $self->ps3gameos;
     return 'Playstation Portable GameOS' if $self->pspgameos;
     return 'iOS' if $self->iphone || $self->ipod || $self->ipad;
+    return 'Mac OS X'                    if $self->macosx;
     return 'Mac'                         if $self->mac;
+    return 'OS2'                         if $self->os2;
     return;
 }
 
@@ -1452,7 +1453,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.59
+version 1.60
 
 =head1 SYNOPSIS
 
