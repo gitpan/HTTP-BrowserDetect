@@ -63,9 +63,10 @@
          "web" : "https://github.com/oalders/http-browserdetect"
       }
    },
-   "version" : "1.61",
+   "version" : "1.62",
    "x_contributors" : [
       "Aran Deltac <bluefeet@gmail.com>",
+      "David Ihnen <davidihnen@gmail.com>",
       "Douglas Christopher Wilson <doug@somethingdoug.com>",
       "Graham Barr <gbarr@pobox.com>",
       "Jon Jensen <jon@endpoint.com>",
