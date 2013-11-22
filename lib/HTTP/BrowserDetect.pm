@@ -3,7 +3,7 @@ use warnings;
 
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.62';
+  $HTTP::BrowserDetect::VERSION = '1.63';
 }
 
 use vars qw(@ALL_TESTS);
@@ -22,9 +22,9 @@ our @WINDOWS_TESTS = qw(
     win95    win98     winnt
     winme    win32     win2k
     winxp    win2k3    winvista
-    win7     win8      wince
-    winphone winphone7 winphone7_5
-    winphone8
+    win7     win8      win8_0
+    win8_1   wince     winphone
+    winphone7  winphone7_5  winphone8
 );
 
 # More precise Mac
@@ -89,6 +89,7 @@ our @IE_TESTS = qw(
     ie5         ie5up       ie55
     ie55up      ie6         ie7
     ie8         ie9         ie10
+    ie11
 );
 
 our @OPERA_TESTS = qw(
@@ -278,6 +279,9 @@ sub _test {
 
     my $ua = lc $self->{user_agent};
 
+    # Trident Engine (detect early for sniffing out IE)
+    $tests->{TRIDENT} = ( index( $ua, "trident/" ) != -1 );
+
     # Browser version
     my ( $major, $minor, $beta ) = (
         $ua =~ m{
@@ -322,6 +326,10 @@ sub _test {
         # Generic "compatible" formats
         ( $major, $minor, $beta ) = split /\./, $1;
 
+    }
+    elsif ($tests->{TRIDENT} && $ua =~ m{\b rv: ( [0-9\.]+ ) \b}x ) {
+        # MSIE masking as Gecko really well ;)
+        ( $major, $minor, $beta ) = split /\./, $1;
     }
 
  # Opera needs to be dealt with specifically
@@ -398,6 +406,7 @@ sub _test {
         = (    !$tests->{FIREFOX}
             && !$tests->{SAFARI}
             && !$tests->{CHROME}
+            && !$tests->{TRIDENT}
             && index( $ua, "mozilla" ) != -1
             && index( $ua, "msie" ) == -1
             && index( $ua, "spoofer" ) == -1
@@ -442,7 +451,8 @@ sub _test {
 
     # Internet Explorer browsers
 
-    $tests->{IE} = ( index( $ua, "msie" ) != -1
+    $tests->{IE} = ( $tests->{TRIDENT}
+            || index( $ua, "msie" ) != -1
             || index( $ua, 'microsoft internet explorer' ) != -1 );
     $tests->{IE3}    = ( $tests->{IE}  && $major == 3 );
     $tests->{IE4}    = ( $tests->{IE}  && $major == 4 );
@@ -457,6 +467,7 @@ sub _test {
     $tests->{IE8}  = ( $tests->{IE} && $major == 8 );
     $tests->{IE9}  = ( $tests->{IE} && $major == 9 );
     $tests->{IE10} = ( $tests->{IE} && $major == 10 );
+    $tests->{IE11} = ( $tests->{IE} && $major == 11 );
 
     # Neoplanet browsers
 
@@ -653,8 +664,6 @@ sub _test {
 
     # Engines
 
-    $tests->{TRIDENT} = ( index( $ua, "trident/" ) != -1 );
-
     $self->{engine_version} = $self->{gecko_version};
 
     if ( $ua =~ /trident\/([\w\.\d]*)/ ) {
@@ -838,7 +847,9 @@ sub _os_tests {
     $tests->{WIN2K3}   = ( index( $ua, "nt 5.2" ) != -1 );
     $tests->{WINVISTA} = ( index( $ua, "nt 6.0" ) != -1 );
     $tests->{WIN7}     = ( index( $ua, "nt 6.1" ) != -1 );
-    $tests->{WIN8}     = ( index( $ua, "nt 6.2" ) != -1 );
+    $tests->{WIN8_0}   = ( index( $ua, "nt 6.2" ) != -1 );
+    $tests->{WIN8_1}   = ( index( $ua, "nt 6.3" ) != -1 );
+    $tests->{WIN8}     = ( $tests->{WIN8_0} || $tests->{WIN8_1} );
     $tests->{DOTNET}   = ( index( $ua, ".net clr" ) != -1 );
 
     $tests->{WINME} = ( index( $ua, "win 9x 4.90" ) != -1 );    # whatever
@@ -1050,7 +1061,8 @@ sub os_string {
     return 'Win2k3'                      if $self->win2k3;
     return 'WinVista'                    if $self->winvista;
     return 'Win7'                        if $self->win7;
-    return 'Win8'                        if $self->win8;
+    return 'Win8'                        if $self->win8_0;
+    return 'Win8.1'                      if $self->win8_1;
     return 'WinNT'                       if $self->winnt;
     return 'Windows Phone'               if $self->winphone;
     return 'Win3x'                       if $self->win3x;
@@ -1453,7 +1465,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.62
+version 1.63
 
 =head1 SYNOPSIS
 
@@ -1650,7 +1662,9 @@ winnt, which is a type of win32)
     win32
         winme win95 win98
         winnt
-            win2k winxp win2k3 winvista win7 win8
+            win2k winxp win2k3 winvista win7
+            win8
+                win8_0 win8_1
     wince
     winphone
         winphone7 winphone7_5 winphone8
@@ -1691,7 +1705,7 @@ Returns one of the following strings, or undef. This method exists solely for
 compatibility with the L<HTTP::Headers::UserAgent> module.
 
   Win95, Win98, WinNT, Win2K, WinXP, Win2k3, WinVista, Win7, Win8,
-  Windows Phone, Mac, Mac OS X, iOS, Win3x, OS2, Unix, Linux,
+  Win8.1, Windows Phone, Mac, Mac OS X, iOS, Win3x, OS2, Unix, Linux,
   Firefox OS, Playstation 3 GameOS, Playstation Portable GameOS,
   RIM Tablet OS
 
@@ -1715,7 +1729,7 @@ version separately.
 
 =head3 icab
 
-=head3 ie ie3 ie4 ie4up ie5 ie55 ie6 ie7 ie8 ie9 ie10
+=head3 ie ie3 ie4 ie4up ie5 ie55 ie6 ie7 ie8 ie9 ie10 ie11
 
 =head3 java
 

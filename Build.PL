@@ -20,7 +20,7 @@ my %module_build_args = (
     "Olaf Alders <olaf\@wundercounter.com> (current maintainer)"
   ],
   "dist_name" => "HTTP-BrowserDetect",
-  "dist_version" => "1.62",
+  "dist_version" => "1.63",
   "license" => "perl",
   "module_name" => "HTTP::BrowserDetect",
   "recommends" => {},
@@ -43,17 +43,21 @@ my %module_build_args = (
 );
 
 
+my %fallback_build_requires = (
+  "File::Slurp" => 0,
+  "FindBin" => 0,
+  "JSON::PP" => 0,
+  "Module::Build" => "0.3601",
+  "Test::FailWarnings" => 0,
+  "Test::More" => 0,
+  "Test::Most" => 0,
+  "Test::NoWarnings" => 0
+);
+
+
 unless ( eval { Module::Build->VERSION(0.4004) } ) {
-  my $tr = delete $module_build_args{test_requires};
-  my $br = $module_build_args{build_requires};
-  for my $mod ( keys %$tr ) {
-    if ( exists $br->{$mod} ) {
-      $br->{$mod} = $tr->{$mod} if $tr->{$mod} > $br->{$mod};
-    }
-    else {
-      $br->{$mod} = $tr->{$mod};
-    }
-  }
+  delete $module_build_args{test_requires};
+  $module_build_args{build_requires} = \%fallback_build_requires;
 }
 
 my $build = Module::Build->new(%module_build_args);
