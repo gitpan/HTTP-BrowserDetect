@@ -3,7 +3,7 @@ use warnings;
 
 package HTTP::BrowserDetect;
 {
-  $HTTP::BrowserDetect::VERSION = '1.64';
+  $HTTP::BrowserDetect::VERSION = '1.65';
 }
 
 use vars qw(@ALL_TESTS);
@@ -1011,6 +1011,12 @@ sub os_version {
         return join '.', $1, $2, $3;
     }
 
+    # firefox in mac
+    # "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:25.0) Gecko/20100101 Firefox/25.0"
+    if ( $self->mac && $self->{user_agent} =~ m{ X \s (\d\d\.\d)}x ) {
+        return $1;
+    }
+
     if (   $self->winphone
        && $self->{user_agent} =~ m{Windows \s Phone \s \w{0,2} \s{0,1} (\d+\.\d+);}x )
     {
@@ -1480,7 +1486,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.64
+version 1.65
 
 =head1 SYNOPSIS
 
@@ -1983,6 +1989,8 @@ Aran Deltac
 yeahoffline
 
 David Ihnen
+
+Hao Wu
 
 =head1 TO DO
 
