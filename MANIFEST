@@ -8,6 +8,7 @@ META.json
 Makefile.PL
 README
 TODO
+cpanfile
 dist.ini
 lib/HTTP/BrowserDetect.pm
 t/01-detect.t

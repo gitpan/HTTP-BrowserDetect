@@ -20,7 +20,7 @@ my %module_build_args = (
     "Olaf Alders <olaf\@wundercounter.com> (current maintainer)"
   ],
   "dist_name" => "HTTP-BrowserDetect",
-  "dist_version" => "1.65",
+  "dist_version" => "1.66",
   "license" => "perl",
   "module_name" => "HTTP::BrowserDetect",
   "recommends" => {},
