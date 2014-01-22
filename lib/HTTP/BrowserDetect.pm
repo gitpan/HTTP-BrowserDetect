@@ -2,10 +2,7 @@ use strict;
 use warnings;
 
 package HTTP::BrowserDetect;
-{
-  $HTTP::BrowserDetect::VERSION = '1.66';
-}
-
+$HTTP::BrowserDetect::VERSION = '1.67';
 use vars qw(@ALL_TESTS);
 
 # Operating Systems
@@ -643,6 +640,7 @@ sub _test {
             || ( index( $ua, "android" ) != -1
             && index( $ua, "mobile" ) == -1
             && index( $ua, "opera" ) == -1 )
+            || ($tests->{FIREFOX} && index( $ua, "tablet" ) != -1)
             || index( $ua, "kindle" ) != -1
             || index( $ua, "xoom" ) != -1
             || index( $ua, "flyer" ) != -1
@@ -987,7 +985,7 @@ sub _os_tests {
 
     $tests->{FIREFOXOS}
         = (    $tests->{FIREFOX}
-            && $tests->{MOBILE}
+            && ($tests->{MOBILE} || $tests->{TABLET})
             && !$tests->{ANDROID}
             && index( $ua, "fennec" ) == -1 );
 
@@ -1491,7 +1489,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.66
+version 1.67
 
 =head1 SYNOPSIS
 
