@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package HTTP::BrowserDetect;
-$HTTP::BrowserDetect::VERSION = '1.67';
+$HTTP::BrowserDetect::VERSION = '1.68';
 use vars qw(@ALL_TESTS);
 
 # Operating Systems
@@ -119,6 +119,7 @@ our @ENGINE_TESTS = qw(
 # https://support.google.com/webmasters/answer/1061943?hl=en
 
 my %ROBOTS = (
+    ahrefs         => 'Ahrefs',
     altavista      => 'AltaVista',
     askjeeves      => 'AskJeeves',
     baidu          => 'Baidu Spider',
@@ -150,6 +151,7 @@ my %ROBOTS = (
     webtv          => 'WebTV',
     wget           => 'wget',
     yahoo          => 'Yahoo',
+    yandex         => 'Yandex',
     yandeximages   => 'YandexImages',
 );
 
@@ -166,6 +168,7 @@ our @ROBOT_TESTS = qw(
     askjeeves    googleadsense googlebotvideo
     googlebotnews googlebotimage google
     linkchecker  yandeximages specialarchiver
+    yandex       ahrefs
 );
 
 our @MISC_TESTS = qw(
@@ -755,6 +758,7 @@ sub _robot_tests {
         ) != -1
     );
 
+    $tests->{AHREFS}         = ( index( $ua, "ahrefsbot" ) != -1 );
     $tests->{ALTAVISTA}      = ( index( $ua, "altavista" ) != -1 );
     $tests->{ASKJEEVES}      = ( index( $ua, "ask jeeves/teoma" ) != -1 );
     $tests->{BAIDU}          = ( index( $ua, "baiduspider" ) != -1 );
@@ -778,10 +782,12 @@ sub _robot_tests {
     $tests->{SPECIALARCHIVER}          = ( index( $ua, "special_archiver" ) != -1 );
     $tests->{WEBCRAWLER}     = ( index( $ua, "webcrawler" ) != -1 );
     $tests->{WGET}           = ( index( $ua, "wget" ) != -1 );
+    $tests->{YANDEX}         = ( index( $ua, "yandexbot" ) != -1 );
     $tests->{YANDEXIMAGES}   = ( index( $ua, "yandeximages" ) != -1 );
 
     $tests->{ROBOT}
-        = (    $tests->{ALTAVISTA}
+        = (    $tests->{AHREFS}
+            || $tests->{ALTAVISTA}
             || $tests->{ASKJEEVES}
             || $tests->{BAIDU}
             || $tests->{FACEBOOK}
@@ -807,6 +813,7 @@ sub _robot_tests {
             || $tests->{WEBCRAWLER}
             || $tests->{WGET}
             || $tests->{YAHOO}
+            || $tests->{YANDEX}
             || $tests->{YANDEXIMAGES} )
         || index( $ua, "agent" ) != -1
         || index( $ua, "bot" ) != -1
@@ -1489,7 +1496,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.67
+version 1.68
 
 =head1 SYNOPSIS
 
@@ -1874,6 +1881,8 @@ automated Web client.
 The following additional methods are available, each returning a true or false
 value. This is by no means a complete list of robots that exist on the Web.
 
+=head3 ahrefs
+
 =head3 altavista
 
 =head3 askjeeves
@@ -1911,6 +1920,10 @@ value. This is by no means a complete list of robots that exist on the Web.
 =head3 wget
 
 =head3 yahoo
+
+=head3 yandex
+
+=head3 yandeximages
 
 =head1 CREDITS
 
@@ -2001,6 +2014,8 @@ yeahoffline
 David Ihnen
 
 Hao Wu
+
+Perlover
 
 =head1 TO DO
 

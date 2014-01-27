@@ -63,7 +63,7 @@
          "web" : "https://github.com/oalders/http-browserdetect"
       }
    },
-   "version" : "1.67",
+   "version" : "1.68",
    "x_contributors" : [
       "Aran Deltac <bluefeet@gmail.com>",
       "David Ihnen <davidihnen@gmail.com>",
@@ -76,6 +76,7 @@
       "Olaf Alders <olaf@wundersolutions.com>",
       "Olivier Bilodeau <olivier@bottomlesspit.org>",
       "Paul Findlay <paul@findlay.net.nz>",
+      "Perlover <perlover@perlover.com>",
       "Robin Smidsr\u00f8d <robin@smidsrod.no>",
       "Ronald J Kimball <rkimball@pangeamedia.com>",
       "Surikov Alexey <surikov@alexey-pc.kiteventures.local>",
