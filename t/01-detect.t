@@ -6,19 +6,19 @@ use warnings;
 use Test::Most;
 use Test::FailWarnings;
 
-use File::Slurp;
 use FindBin;
 use JSON::PP;
+use Path::Tiny qw( path );
 
 # test that the module loads without errors
 my $w;
 {
     local $SIG{__WARN__} = sub { $w = shift };
-    require_ok( 'HTTP::BrowserDetect' );
+    require HTTP::BrowserDetect;
 }
-ok !$w;
+ok( !$w, 'no warnings on require' );
 
-my $json = read_file( "$FindBin::Bin/useragents.json" );
+my $json = path( "$FindBin::Bin/useragents.json" )->slurp;
 
 my $tests = JSON::PP->new->ascii->decode( $json );
 

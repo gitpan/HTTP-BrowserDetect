@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 package HTTP::BrowserDetect;
-$HTTP::BrowserDetect::VERSION = '1.71';
+$HTTP::BrowserDetect::VERSION = '1.72';
 use vars qw(@ALL_TESTS);
 
 # Operating Systems
@@ -1511,7 +1511,7 @@ HTTP::BrowserDetect - Determine Web browser, version, and platform from an HTTP 
 
 =head1 VERSION
 
-version 1.71
+version 1.72
 
 =head1 SYNOPSIS
 

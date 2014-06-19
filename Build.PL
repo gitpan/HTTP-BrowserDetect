@@ -21,7 +21,7 @@ my %module_build_args = (
     "Olaf Alders <olaf\@wundercounter.com> (current maintainer)"
   ],
   "dist_name" => "HTTP-BrowserDetect",
-  "dist_version" => "1.71",
+  "dist_version" => "1.72",
   "license" => "perl",
   "module_name" => "HTTP::BrowserDetect",
   "recommends" => {},
@@ -33,9 +33,9 @@ my %module_build_args = (
   },
   "script_files" => [],
   "test_requires" => {
-    "File::Slurp" => 0,
     "FindBin" => 0,
     "JSON::PP" => 0,
+    "Path::Tiny" => 0,
     "Test::FailWarnings" => 0,
     "Test::More" => 0,
     "Test::Most" => 0,
@@ -45,10 +45,10 @@ my %module_build_args = (
 
 
 my %fallback_build_requires = (
-  "File::Slurp" => 0,
   "FindBin" => 0,
   "JSON::PP" => 0,
   "Module::Build" => "0.3601",
+  "Path::Tiny" => 0,
   "Test::FailWarnings" => 0,
   "Test::More" => 0,
   "Test::Most" => 0,

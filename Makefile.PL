@@ -29,15 +29,15 @@ my %WriteMakefileArgs = (
     "warnings" => 0
   },
   "TEST_REQUIRES" => {
-    "File::Slurp" => 0,
     "FindBin" => 0,
     "JSON::PP" => 0,
+    "Path::Tiny" => 0,
     "Test::FailWarnings" => 0,
     "Test::More" => 0,
     "Test::Most" => 0,
     "Test::NoWarnings" => 0
   },
-  "VERSION" => "1.71",
+  "VERSION" => "1.72",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -45,10 +45,10 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
-  "File::Slurp" => 0,
   "FindBin" => 0,
   "JSON::PP" => 0,
   "Module::Build" => "0.3601",
+  "Path::Tiny" => 0,
   "Test::FailWarnings" => 0,
   "Test::More" => 0,
   "Test::Most" => 0,

@@ -7,9 +7,9 @@ on 'build' => sub {
 };
 
 on 'test' => sub {
-  requires "File::Slurp" => "0";
   requires "FindBin" => "0";
   requires "JSON::PP" => "0";
+  requires "Path::Tiny" => "0";
   requires "Test::FailWarnings" => "0";
   requires "Test::More" => "0";
   requires "Test::Most" => "0";
