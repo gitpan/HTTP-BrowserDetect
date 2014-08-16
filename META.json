@@ -6,7 +6,7 @@
       "Olaf Alders <olaf@wundercounter.com> (current maintainer)"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 5.015, CPAN::Meta::Converter version 2.140640",
+   "generated_by" : "Dist::Zilla version 5.020, CPAN::Meta::Converter version 2.140640",
    "license" : [
       "perl_5"
    ],
@@ -18,13 +18,13 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "Module::Build" : "0.3601"
+            "Module::Build" : "0.28"
          }
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.30",
-            "Module::Build" : "0.3601"
+            "ExtUtils::MakeMaker" : "0",
+            "Module::Build" : "0.28"
          }
       },
       "develop" : {
@@ -34,6 +34,7 @@
       },
       "runtime" : {
          "requires" : {
+            "perl" : "5.006",
             "strict" : "0",
             "vars" : "0",
             "warnings" : "0"
@@ -63,7 +64,7 @@
          "web" : "https://github.com/oalders/http-browserdetect"
       }
    },
-   "version" : "1.72",
+   "version" : "1.73",
    "x_contributors" : [
       "Aran Deltac <bluefeet@gmail.com>",
       "David Ihnen <davidihnen@gmail.com>",
