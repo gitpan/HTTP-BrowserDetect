@@ -64,7 +64,7 @@
          "web" : "https://github.com/oalders/http-browserdetect"
       }
    },
-   "version" : "1.74",
+   "version" : "1.75",
    "x_contributors" : [
       "Aran Deltac <bluefeet@gmail.com>",
       "David Ihnen <davidihnen@gmail.com>",
