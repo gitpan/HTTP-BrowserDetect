@@ -3,7 +3,7 @@ NAME
     an HTTP user agent string
 
 VERSION
-    version 1.73
+    version 1.74
 
 SYNOPSIS
         use HTTP::BrowserDetect;
@@ -328,6 +328,7 @@ Detecting Other Devices
    linkexchange
    lwp
    lycos
+   mj12bot
    msn (same as bing)
    puf
    slurp
